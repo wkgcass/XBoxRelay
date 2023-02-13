@@ -67,6 +67,7 @@ public class AutoRobot {
                     hasMousePos = true;
                 }
                 var delta = l - g.lastTs;
+                g.lastTs = l;
                 var dx = current.mouseMove.x / 1000d * (delta / 1_000_000d);
                 var dy = current.mouseMove.y / 1000d * (delta / 1_000_000d);
                 mouseX += dx;
