@@ -1,6 +1,9 @@
 package net.cassite.xboxrelay.ui;
 
+import com.sun.jna.platform.win32.BaseTSD;
+import com.sun.jna.platform.win32.WinDef;
 import io.vproxy.vfx.robot.RobotWrapper;
+import io.vproxy.vfx.util.OSUtils;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import net.cassite.xboxrelay.base.TriggerLevel;
@@ -45,9 +48,8 @@ public class AutoRobot {
     private class Timer extends AnimationTimer {
         @Override
         public void handle(long l) {
-            boolean hasMousePos = false;
-            var mouseX = 0d;
-            var mouseY = 0d;
+            var dxMouse = 0d;
+            var dyMouse = 0d;
             for (var g : groups) {
                 var current = g.current;
                 if (current == null) {
@@ -60,21 +62,26 @@ public class AutoRobot {
                     g.lastTs = l;
                     continue;
                 }
-                if (!hasMousePos) {
-                    var mousePoint2D = robot.getMousePosition();
-                    mouseX = mousePoint2D.getX();
-                    mouseY = mousePoint2D.getY();
-                    hasMousePos = true;
-                }
                 var delta = l - g.lastTs;
                 g.lastTs = l;
                 var dx = current.mouseMove.x / 1000d * (delta / 1_000_000d);
                 var dy = current.mouseMove.y / 1000d * (delta / 1_000_000d);
-                mouseX += dx;
-                mouseY += dy;
+                dxMouse += dx;
+                dyMouse += dy;
             }
-            if (hasMousePos) {
-                robot.mouseMove(mouseX, mouseY);
+            if (dxMouse != 0 || dyMouse != 0) {
+                if (OSUtils.isWindows()) {
+                    JNAMouseEvent.User32.INSTANCE.mouse_event(new WinDef.DWORD(JNAMouseEvent.User32.MOUSEEVENTF_MOVE),
+                        new WinDef.DWORD((long) dxMouse), new WinDef.DWORD((long) dyMouse),
+                        new WinDef.DWORD(0), new BaseTSD.ULONG_PTR(0));
+                } else {
+                    var mousePoint2D = robot.getMousePosition();
+                    var mouseX = mousePoint2D.getX();
+                    var mouseY = mousePoint2D.getY();
+                    mouseX += dxMouse;
+                    mouseY += dyMouse;
+                    robot.mouseMove(mouseX, mouseY);
+                }
             }
         }
     }

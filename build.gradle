@@ -82,6 +82,8 @@ project(":ui") {
     dependencies {
         implementation project(":base")
         implementation group: 'io.vproxy', name: 'vfx', version: '1.3.0'
+        implementation group: 'net.java.dev.jna', name: 'jna', version: '5.12.1'
+        implementation group: 'net.java.dev.jna', name: 'jna-platform', version: '5.12.1'
     }
 
     task runUI(type: JavaExec) {
