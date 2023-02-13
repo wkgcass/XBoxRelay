@@ -1,0 +1,13 @@
+compileJava {
+    doFirst {
+        options.compilerArgs << '--module-path' << classpath.asPath
+    }
+    options.compilerArgs << '--add-modules' << [
+            'net.cassite.xboxrelay.base',
+            'kotlin.stdlib',
+    ].join(',')
+}
+
+jar {
+    archiveName "xboxrelay-agent.jar"
+}

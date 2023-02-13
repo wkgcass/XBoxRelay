@@ -1,0 +1,13 @@
+compileJava {
+    options.compilerArgs << '--add-modules' << [
+            'javafx.controls',
+            'io.vproxy.vfx',
+            'io.vertx.core',
+            'kotlin.stdlib',
+            'net.cassite.xboxrelay.base',
+    ].join(',')
+}
+
+jar {
+    archiveName "xboxrelay-ui.jar"
+}

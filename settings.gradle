@@ -1,0 +1,5 @@
+rootProject.name = 'XBoxRelay'
+include 'agent'
+include 'ui'
+include 'base'
+
