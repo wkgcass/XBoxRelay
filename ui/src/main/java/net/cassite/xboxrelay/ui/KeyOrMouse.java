@@ -1,6 +1,7 @@
 package net.cassite.xboxrelay.ui;
 
 import io.vproxy.vfx.entity.input.Key;
+import io.vproxy.vfx.util.MiscUtils;
 import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
@@ -109,5 +110,18 @@ public class KeyOrMouse implements JSONObject {
             ob.putInst("mouseWheel", mouseWheel.toJson());
         }
         return ob.build();
+    }
+
+    @Override
+    public String toString() {
+        if (key != null) {
+            return "key:" + key;
+        } else if (mouseMove != null) {
+            return "move:" + MiscUtils.roughFloatValueFormat.format(mouseMove.x) + ", " + MiscUtils.roughFloatValueFormat.format(mouseMove.y);
+        } else if (mouseWheel != null) {
+            return "wheel:" + MiscUtils.roughFloatValueFormat.format(mouseWheel.wheelAmt);
+        } else {
+            return "Unknown";
+        }
     }
 }

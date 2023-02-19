@@ -154,7 +154,16 @@ public class ConfigureScene extends VScene {
                 saveConfig();
             });
 
-            topButtons.getChildren().addAll(planLabel, planComboBoxW, saveButton, delButton);
+            var tableButton = new FusionButton(I18n.get().showTableButton());
+            tableButton.setPrefWidth(150);
+            FXUtils.observeHeight(topPane.getContentPane(), tableButton);
+            tableButton.setOnAction(e -> {
+                var scene = new ShowConfigTableScene(sceneGroupGetter.get(), currentPlan);
+                sceneGroupGetter.get().addScene(scene, VSceneHideMethod.TO_RIGHT);
+                sceneGroupGetter.get().show(scene, VSceneShowMethod.FROM_RIGHT);
+            });
+
+            topButtons.getChildren().addAll(planLabel, planComboBoxW, saveButton, delButton, tableButton);
         }
 
         var imagePane = new Pane();

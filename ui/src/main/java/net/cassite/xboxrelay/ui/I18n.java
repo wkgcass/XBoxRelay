@@ -40,6 +40,10 @@ public interface I18n {
         return "Delete";
     }
 
+    default String showTableButton() {
+        return "Show Conf Table";
+    }
+
     default String savingConfigurationFailed() {
         return "Saving configuration failed";
     }
@@ -86,5 +90,29 @@ public interface I18n {
 
     default String failedToStart() {
         return "Failed to start, please make sure the address is reachable and the agent is running";
+    }
+
+    default String tableColName() {
+        return "name";
+    }
+
+    default String tableColActionMin() {
+        return "action min";
+    }
+
+    default String tableColActionMax() {
+        return "action max";
+    }
+
+    default String tableColMin() {
+        return "min";
+    }
+
+    default String tableColMax() {
+        return "max";
+    }
+
+    default String back() {
+        return "Back";
     }
 }
