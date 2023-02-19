@@ -1,5 +1,6 @@
 package net.cassite.xboxrelay.ui.scene;
 
+import io.vproxy.vfx.component.keychooser.KeyChooser;
 import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.manager.font.FontManager;
 import io.vproxy.vfx.theme.Theme;
@@ -95,6 +96,10 @@ public class BindingConfigurationScene extends VScene {
                     new CornerRadii(4), Insets.EMPTY)));
                 setCursor(Cursor.HAND);
             }};
+            chosenKey.setOnMouseClicked(e -> {
+                var key = new KeyChooser().choose();
+                key.ifPresent(value -> chosenKey.setText(value.toString()));
+            });
 
             if (config != null && config.key != null) {
                 enableKeyPress.setSelected(true);
