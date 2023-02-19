@@ -2,12 +2,16 @@ package net.cassite.xboxrelay.ui;
 
 import com.sun.jna.platform.win32.BaseTSD;
 import com.sun.jna.platform.win32.WinDef;
+import io.vproxy.vfx.entity.input.Key;
+import io.vproxy.vfx.entity.input.KeyCode;
 import io.vproxy.vfx.robot.RobotWrapper;
+import io.vproxy.vfx.util.FXUtils;
 import io.vproxy.vfx.util.OSUtils;
 import javafx.animation.AnimationTimer;
 import net.cassite.xboxrelay.base.TriggerLevel;
 import net.cassite.xboxrelay.base.XBoxEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +21,8 @@ public class AutoRobot {
     private boolean isRunning = false;
     private final Timer timer;
     private final RobotWrapper robot;
+    private boolean fnEnabled = false;
+    private boolean isHandlingFnInput = false;
 
     public AutoRobot(Binding binding) {
         this.binding = new Binding(binding);
@@ -139,6 +145,13 @@ public class AutoRobot {
         if (action == null) {
             return;
         }
+        if (fnEnabled) {
+            return;
+        }
+        if (action.fn) {
+            enableFn(group, action);
+            return;
+        }
         if (group.current != null) {
             if (Objects.equals(group.current, action)) {
                 group.level = level;
@@ -154,6 +167,18 @@ public class AutoRobot {
         if (action.key != null) {
             robot.press(fkm.key);
         }
+    }
+
+    private void enableFn(ActionDataGroup group, Action action) {
+        if (fnEnabled) {
+            return;
+        }
+        fnEnabled = true;
+        // cancel all
+        for (var g : groups) {
+            cancel(g);
+        }
+        group.current = action;
     }
 
     private void handleGradient(Action min, Action max, XBoxEvent event) {
@@ -175,7 +200,20 @@ public class AutoRobot {
         }
         var level = event.level;
         switch (level) {
-            case OFF -> cancel(group);
+            case OFF -> {
+                if (fnEnabled && group.current != null) {
+                    if (group.current == min) {
+                        triggerFnInput(min);
+                    } else if (group.current == max) {
+                        triggerFnInput(max);
+                    } else if (group.current == bMin) {
+                        triggerFnInput(bMin);
+                    } else if (group.current == bMax) {
+                        triggerFnInput(bMax);
+                    }
+                }
+                cancel(group);
+            }
             case MIN -> apply(group, min, level);
             case MAX -> apply(group, max, min, level);
             case B_MIN -> apply(group, bMin, level);
@@ -187,10 +225,54 @@ public class AutoRobot {
         var level = event.level;
         var group = action.group;
         if (level == TriggerLevel.OFF) {
+            triggerFnInput(action);
             cancel(group);
         } else {
             apply(group, action, level);
         }
+    }
+
+    private void triggerFnInput(Action action) {
+        if (action.fn) {
+            // the fn action triggers fn input means to cancel the fn state
+            fnEnabled = false;
+            return;
+        }
+        if (!fnEnabled) {
+            return;
+        }
+        if (isHandlingFnInput) {
+            return;
+        }
+        var input = action.fnInput;
+        if (input == null) {
+            return;
+        }
+        isHandlingFnInput = true;
+        var pressed = new ArrayList<Key>(4);
+        if (input.ctrl) {
+            var ctrl = new Key(KeyCode.CONTROL);
+            pressed.add(ctrl);
+            robot.press(ctrl);
+        }
+        if (input.alt) {
+            var alt = new Key(KeyCode.ALT);
+            pressed.add(alt);
+            robot.press(alt);
+        }
+        if (input.shift) {
+            var shift = new Key(KeyCode.SHIFT);
+            pressed.add(shift);
+            robot.press(shift);
+        }
+        pressed.add(input.key);
+        robot.press(input.key);
+        FXUtils.runDelay(50, () -> {
+            for (var k : pressed) {
+                robot.release(k);
+            }
+            isHandlingFnInput = false;
+        });
     }
 
     public void lsbX(XBoxEvent event) {

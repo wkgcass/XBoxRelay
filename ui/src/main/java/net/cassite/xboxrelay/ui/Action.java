@@ -1,10 +1,12 @@
 package net.cassite.xboxrelay.ui;
 
+import io.vproxy.vfx.entity.input.InputData;
 import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.util.MiscUtils;
 import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
+import vjson.deserializer.rule.BoolRule;
 import vjson.deserializer.rule.ObjectRule;
 import vjson.deserializer.rule.Rule;
 import vjson.util.ObjectBuilder;
@@ -15,28 +17,39 @@ public class Action implements JSONObject {
     public final Key key;
     public final MouseMove mouseMove;
     public final MouseWheel mouseWheel;
+    public final boolean fn;
+    public InputData fnInput;
 
     public static final Rule<Action> rule = ObjectRule.builder(ActionBuilder::new, ActionBuilder::build, builder -> builder
         .put("key", (o, it) -> o.key = it, Key.rule)
         .put("mouseMove", (o, it) -> o.mouseMove = it, MouseMove.rule)
         .put("mouseWheel", (o, it) -> o.mouseWheel = it, MouseWheel.rule)
+        .put("fn", (o, it) -> o.fn = it, BoolRule.get())
+        .put("fnInput", (o, it) -> o.fnInput = it, InputData.rule)
     );
 
     private static class ActionBuilder {
         Key key;
         MouseMove mouseMove;
         MouseWheel mouseWheel;
+        boolean fn;
+        InputData fnInput;
 
         Action build() {
+            Action ret;
             if (key != null) {
-                return new Action(key);
+                ret = new Action(key);
             } else if (mouseMove != null) {
-                return new Action(mouseMove);
+                ret = new Action(mouseMove);
             } else if (mouseWheel != null) {
-                return new Action(mouseWheel);
+                ret = new Action(mouseWheel);
+            } else if (fn) {
+                ret = new Action(true);
             } else {
                 throw new IllegalStateException();
             }
+            ret.fnInput = fnInput;
+            return ret;
         }
     }
 
@@ -46,24 +59,52 @@ public class Action implements JSONObject {
         this.key = key;
         this.mouseMove = null;
         this.mouseWheel = null;
+        this.fn = false;
     }
 
     public Action(MouseMove mouseMove) {
         this.key = null;
         this.mouseMove = mouseMove;
         this.mouseWheel = null;
+        this.fn = false;
     }
 
     public Action(MouseWheel mouseWheel) {
         this.key = null;
         this.mouseMove = null;
         this.mouseWheel = mouseWheel;
+        this.fn = false;
     }
 
-    private Action(Key key, MouseMove mouseMove, MouseWheel mouseWheel) {
-        this.key = key;
-        this.mouseMove = mouseMove;
-        this.mouseWheel = mouseWheel;
+    private Action(@SuppressWarnings("unused") boolean fn) {
+        this.key = null;
+        this.mouseMove = null;
+        this.mouseWheel = null;
+        this.fn = true;
+    }
+
+    public static Action newFn() {
+        return new Action(true);
+    }
+
+    private Action(@SuppressWarnings("unused") Void v) {
+        this.key = null;
+        this.mouseMove = null;
+        this.mouseWheel = null;
+        this.fn = false;
+    }
+
+    public static Action newEmpty() {
+        return new Action((Void) null);
+    }
+
+    @SuppressWarnings("CopyConstructorMissesField")
+    private Action(Action action) {
+        this.key = action.key;
+        this.mouseMove = action.mouseMove;
+        this.mouseWheel = action.mouseWheel;
+        this.fn = action.fn;
+        this.fnInput = action.fnInput;
     }
 
     public boolean needToCancelForSwitchingTo(Action action) {
@@ -73,7 +114,7 @@ public class Action implements JSONObject {
     public static Action copyOf(Action o) {
         if (o == null)
             return null;
-        return new Action(o.key, o.mouseMove, o.mouseWheel);
+        return new Action(o);
     }
 
     @Override
@@ -81,11 +122,13 @@ public class Action implements JSONObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Action that = (Action) o;
+        Action action = (Action) o;
 
-        if (!Objects.equals(key, that.key)) return false;
-        if (!Objects.equals(mouseMove, that.mouseMove)) return false;
-        return Objects.equals(mouseWheel, that.mouseWheel);
+        if (fn != action.fn) return false;
+        if (!Objects.equals(key, action.key)) return false;
+        if (!Objects.equals(mouseMove, action.mouseMove)) return false;
+        if (!Objects.equals(mouseWheel, action.mouseWheel)) return false;
+        return Objects.equals(fnInput, action.fnInput);
     }
 
     @Override
@@ -93,6 +136,8 @@ public class Action implements JSONObject {
         int result = key != null ? key.hashCode() : 0;
         result = 31 * result + (mouseMove != null ? mouseMove.hashCode() : 0);
         result = 31 * result + (mouseWheel != null ? mouseWheel.hashCode() : 0);
+        result = 31 * result + (fn ? 1 : 0);
+        result = 31 * result + (fnInput != null ? fnInput.hashCode() : 0);
         return result;
     }
 
@@ -109,19 +154,60 @@ public class Action implements JSONObject {
         if (mouseWheel != null) {
             ob.putInst("mouseWheel", mouseWheel.toJson());
         }
+        if (fn) {
+            ob.put("fn", true);
+        }
+        if (fnInput != null) {
+            ob.putInst("fnInput", fnInput.toJson());
+        }
         return ob.build();
     }
 
     @Override
     public String toString() {
+        var sb = new StringBuilder();
         if (key != null) {
-            return "key:" + key;
+            sb.append("key: ").append(key);
         } else if (mouseMove != null) {
-            return "move:" + MiscUtils.roughFloatValueFormat.format(mouseMove.x) + ", " + MiscUtils.roughFloatValueFormat.format(mouseMove.y);
+            sb.append("move: ")
+                .append(MiscUtils.roughFloatValueFormat.format(mouseMove.x))
+                .append(", ")
+                .append(MiscUtils.roughFloatValueFormat.format(mouseMove.y));
         } else if (mouseWheel != null) {
-            return "wheel:" + MiscUtils.roughFloatValueFormat.format(mouseWheel.wheelAmt);
-        } else {
-            return "Unknown";
+            sb.append("wheel:")
+                .append(MiscUtils.roughFloatValueFormat.format(mouseWheel.wheelAmt));
+        } else if (fn) {
+            sb.append("FN");
         }
+        if (sb.isEmpty()) {
+            if (fnInput == null) {
+                sb.append("Unknown");
+            } else {
+                formatInput(sb);
+            }
+        } else {
+            if (fnInput != null) {
+                sb.append("\n");
+                formatInput(sb);
+            }
+        }
+        return sb.toString();
+    }
+
+    private void formatInput(StringBuilder sb) {
+        sb.append("FN: ");
+        if (fnInput.ctrl) {
+            sb.append("c");
+        }
+        if (fnInput.alt) {
+            sb.append("a");
+        }
+        if (fnInput.shift) {
+            sb.append("s");
+        }
+        if (fnInput.ctrl || fnInput.alt || fnInput.shift) {
+            sb.append("-");
+        }
+        sb.append(fnInput.key);
     }
 }

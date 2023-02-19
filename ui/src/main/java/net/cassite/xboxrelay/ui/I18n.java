@@ -64,6 +64,14 @@ public interface I18n {
         return "Mouse Wheel";
     }
 
+    default String enableFN() {
+        return "Function Trigger";
+    }
+
+    default String enableFnInput() {
+        return "Function Input";
+    }
+
     default String invalidKey() {
         return "The chosen key is not valid";
     }

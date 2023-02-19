@@ -1,6 +1,7 @@
 package net.cassite.xboxrelay.ui.scene;
 
 import io.vproxy.vfx.component.keychooser.KeyChooser;
+import io.vproxy.vfx.entity.input.InputData;
 import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.manager.font.FontManager;
 import io.vproxy.vfx.theme.Theme;
@@ -45,6 +46,12 @@ public class BindingConfigurationScene extends VScene {
     private final TextField moveY;
     private final CheckBox enableMouseWheel;
     private final TextField scroll;
+    private final CheckBox enableFN;
+    private final CheckBox enableFnInput;
+    private final CheckBox fnInputCtrl;
+    private final CheckBox fnInputAlt;
+    private final CheckBox fnInputShift;
+    private final Label fnInputChosenKey;
 
     public BindingConfigurationScene(VSceneGroup sceneGroup, String name,
                                      BindingConfiguration conf) {
@@ -85,11 +92,11 @@ public class BindingConfigurationScene extends VScene {
                 FontManager.get().setFont(this);
                 FXUtils.disableFocusColor(this);
             }};
-            enableKeyPress.setPrefWidth(200);
+            enableKeyPress.setPrefWidth(150);
             chosenKey = new Label("Unknown") {{
                 setTextFill(Theme.current().normalTextColor());
                 FontManager.get().setFont(this);
-                setPrefWidth(250);
+                setPrefWidth(200);
                 setPrefHeight(30);
                 setAlignment(Pos.CENTER);
                 setBackground(new Background(new BackgroundFill(Color.GRAY,
@@ -121,7 +128,7 @@ public class BindingConfigurationScene extends VScene {
                 FontManager.get().setFont(this);
                 FXUtils.disableFocusColor(this);
             }};
-            enableMouseMove.setPrefWidth(200);
+            enableMouseMove.setPrefWidth(150);
             moveX = new TextField("0") {{
                 setPrefWidth(80);
             }};
@@ -169,7 +176,7 @@ public class BindingConfigurationScene extends VScene {
                 FontManager.get().setFont(this);
                 FXUtils.disableFocusColor(this);
             }};
-            enableMouseWheel.setPrefWidth(200);
+            enableMouseWheel.setPrefWidth(150);
             scroll = new TextField("0") {{
                 setPrefWidth(80);
             }};
@@ -190,10 +197,92 @@ public class BindingConfigurationScene extends VScene {
         }
 
         {
+            var hbox = new HBox();
+            hbox.setSpacing(20);
+            hbox.setAlignment(Pos.CENTER_LEFT);
+            hbox.setPrefHeight(40);
+            vbox.getChildren().add(hbox);
+            vbox.getChildren().add(new VPadding(PADDING_V));
+
+            enableFN = new CheckBox(I18n.get().enableFN()) {{
+                setTextFill(Theme.current().normalTextColor());
+                FontManager.get().setFont(this);
+                FXUtils.disableFocusColor(this);
+            }};
+            enableFN.setPrefWidth(150);
+
+            if (config != null && config.fn) {
+                enableFN.setSelected(true);
+            }
+
+            hbox.getChildren().addAll(enableFN);
+        }
+
+        {
+            var hbox = new HBox();
+            hbox.setSpacing(20);
+            hbox.setAlignment(Pos.CENTER_LEFT);
+            hbox.setPrefHeight(40);
+            vbox.getChildren().add(hbox);
+            vbox.getChildren().add(new VPadding(PADDING_V));
+
+            enableFnInput = new CheckBox(I18n.get().enableFnInput()) {{
+                setTextFill(Theme.current().normalTextColor());
+                FontManager.get().setFont(this);
+                FXUtils.disableFocusColor(this);
+            }};
+            enableFnInput.setPrefWidth(150);
+
+            fnInputCtrl = new CheckBox("ctrl") {{
+                setTextFill(Theme.current().normalTextColor());
+                FontManager.get().setFont(this);
+                FXUtils.disableFocusColor(this);
+            }};
+            fnInputAlt = new CheckBox("alt") {{
+                setTextFill(Theme.current().normalTextColor());
+                FontManager.get().setFont(this);
+                FXUtils.disableFocusColor(this);
+            }};
+            fnInputShift = new CheckBox("shift") {{
+                setTextFill(Theme.current().normalTextColor());
+                FontManager.get().setFont(this);
+                FXUtils.disableFocusColor(this);
+            }};
+
+            fnInputChosenKey = new Label("Unknown") {{
+                setTextFill(Theme.current().normalTextColor());
+                FontManager.get().setFont(this);
+                setPrefWidth(200);
+                setPrefHeight(30);
+                setAlignment(Pos.CENTER);
+                setBackground(new Background(new BackgroundFill(Color.GRAY,
+                    new CornerRadii(4), Insets.EMPTY)));
+                setCursor(Cursor.HAND);
+            }};
+            fnInputChosenKey.setOnMouseClicked(e -> {
+                var key = new KeyChooser().choose();
+                key.ifPresent(value -> fnInputChosenKey.setText(value.toString()));
+            });
+
+            if (config != null && config.fnInput != null) {
+                enableFnInput.setSelected(true);
+                fnInputCtrl.setSelected(config.fnInput.ctrl);
+                fnInputAlt.setSelected(config.fnInput.alt);
+                fnInputShift.setSelected(config.fnInput.shift);
+                fnInputChosenKey.setText(config.fnInput.key.toString());
+            }
+
+            hbox.getChildren().addAll(enableFnInput,
+                fnInputCtrl, fnInputAlt, fnInputShift,
+                fnInputChosenKey);
+        }
+
+        {
             var allChecks = Arrays.asList(
                 enableKeyPress,
                 enableMouseMove,
-                enableMouseWheel
+                enableMouseWheel,
+                enableFN
             );
             for (var c : allChecks) {
                 c.setOnAction(e -> {
@@ -212,6 +301,7 @@ public class BindingConfigurationScene extends VScene {
         okButton.setPrefWidth(120);
         okButton.setPrefHeight(60);
         okButton.setOnAction(e -> {
+            Action action;
             if (enableKeyPress.isSelected()) {
                 var text = chosenKey.getText();
                 var key = new Key(text);
@@ -219,7 +309,7 @@ public class BindingConfigurationScene extends VScene {
                     SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().invalidKey());
                     return;
                 }
-                conf.setter().accept(new Action(key));
+                action = new Action(key);
             } else if (enableMouseMove.isSelected()) {
                 var xText = moveX.getText();
                 var yText = moveY.getText();
@@ -237,7 +327,7 @@ public class BindingConfigurationScene extends VScene {
                     SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().invalidMoveY());
                     return;
                 }
-                conf.setter().accept(new Action(new MouseMove(x, y)));
+                action = new Action(new MouseMove(x, y));
             } else if (enableMouseWheel.isSelected()) {
                 var amtText = scroll.getText();
                 double amt;
@@ -247,10 +337,23 @@ public class BindingConfigurationScene extends VScene {
                     SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().invalidMouseWheel());
                     return;
                 }
-                conf.setter().accept(new Action(new MouseWheel(amt)));
+                action = new Action(new MouseWheel(amt));
+            } else if (enableFN.isSelected()) {
+                action = Action.newFn();
             } else {
-                conf.setter().accept(null);
+                action = null;
             }
+            if (enableFnInput.isSelected()) {
+                if (action == null) {
+                    action = Action.newEmpty();
+                }
+                action.fnInput = new InputData();
+                action.fnInput.ctrl = fnInputCtrl.isSelected();
+                action.fnInput.alt = fnInputAlt.isSelected();
+                action.fnInput.shift = fnInputShift.isSelected();
+                action.fnInput.key = new Key(fnInputChosenKey.getText());
+            }
+            conf.setter().accept(action);
 
             sceneGroup.hide(this, VSceneHideMethod.TO_RIGHT);
             FXUtils.runDelay(VScene.ANIMATION_DURATION_MILLIS, () -> sceneGroup.removeScene(this));

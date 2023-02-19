@@ -9,6 +9,8 @@ import io.vproxy.vfx.ui.scene.VScene;
 import io.vproxy.vfx.ui.scene.VSceneGroup;
 import io.vproxy.vfx.ui.scene.VSceneHideMethod;
 import io.vproxy.vfx.ui.scene.VSceneRole;
+import io.vproxy.vfx.ui.table.CellAware;
+import io.vproxy.vfx.ui.table.VTableCellPane;
 import io.vproxy.vfx.ui.table.VTableColumn;
 import io.vproxy.vfx.ui.table.VTableView;
 import io.vproxy.vfx.util.FXUtils;
@@ -105,7 +107,7 @@ public class ShowConfigTableScene extends VScene {
         ));
     }
 
-    private static class TableData {
+    private static class TableData implements CellAware<TableData> {
         final String name;
         final String actionMin;
         final String actionMax;
@@ -139,6 +141,12 @@ public class ShowConfigTableScene extends VScene {
             this.actionMax = actionMax;
             this.min = min;
             this.max = max;
+        }
+
+        @Override
+        public void setCell(VTableColumn<TableData, ?> col, VTableCellPane<TableData> pane) {
+            if (actionMin.contains("\n") || actionMax.contains("\n"))
+                pane.setMinHeight(45);
         }
     }
 }
