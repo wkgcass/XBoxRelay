@@ -1,7 +1,7 @@
 package net.cassite.xboxrelay.ui.entity;
 
 import io.vproxy.vfx.util.IOUtils;
-import net.cassite.xboxrelay.base.Logger;
+import io.vproxy.vfx.util.Logger;
 import net.cassite.xboxrelay.ui.prebuilt.DefaultPlan;
 import net.cassite.xboxrelay.ui.prebuilt.TowerOfFantasyPlan;
 import vjson.CharStream;

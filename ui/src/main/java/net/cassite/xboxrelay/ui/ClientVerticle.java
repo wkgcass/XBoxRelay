@@ -7,7 +7,7 @@ import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
 import net.cassite.xboxrelay.base.ConfigureMessage;
 import net.cassite.xboxrelay.base.HeartBeatMessage;
-import net.cassite.xboxrelay.base.Logger;
+import io.vproxy.vfx.util.Logger;
 
 public class ClientVerticle extends AbstractVerticle {
     private final String host;
