@@ -11,126 +11,126 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Binding implements JSONObject {
-    public KeyOrMouse lsbXMin;
-    public KeyOrMouse lsbXMax;
-    public KeyOrMouse lsbYMin;
-    public KeyOrMouse lsbYMax;
-    public KeyOrMouse lsbXBMin;
-    public KeyOrMouse lsbXBMax;
-    public KeyOrMouse lsbYBMin;
-    public KeyOrMouse lsbYBMax;
+    public Action lsbXMin;
+    public Action lsbXMax;
+    public Action lsbYMin;
+    public Action lsbYMax;
+    public Action lsbXBMin;
+    public Action lsbXBMax;
+    public Action lsbYBMin;
+    public Action lsbYBMax;
 
-    public KeyOrMouse rsbXMin;
-    public KeyOrMouse rsbXMax;
-    public KeyOrMouse rsbYMin;
-    public KeyOrMouse rsbYMax;
-    public KeyOrMouse rsbXBMin;
-    public KeyOrMouse rsbXBMax;
-    public KeyOrMouse rsbYBMin;
-    public KeyOrMouse rsbYBMax;
+    public Action rsbXMin;
+    public Action rsbXMax;
+    public Action rsbYMin;
+    public Action rsbYMax;
+    public Action rsbXBMin;
+    public Action rsbXBMax;
+    public Action rsbYBMin;
+    public Action rsbYBMax;
 
-    public KeyOrMouse du;
-    public KeyOrMouse dd;
-    public KeyOrMouse dl;
-    public KeyOrMouse dr;
-    public KeyOrMouse back;
-    public KeyOrMouse guide;
-    public KeyOrMouse start;
-    public KeyOrMouse tl;
-    public KeyOrMouse tr;
-    public KeyOrMouse a;
-    public KeyOrMouse b;
-    public KeyOrMouse x;
-    public KeyOrMouse y;
-    public KeyOrMouse lb;
-    public KeyOrMouse rb;
-    public KeyOrMouse ltMin;
-    public KeyOrMouse ltMax;
-    public KeyOrMouse rtMin;
-    public KeyOrMouse rtMax;
+    public Action du;
+    public Action dd;
+    public Action dl;
+    public Action dr;
+    public Action back;
+    public Action guide;
+    public Action start;
+    public Action tl;
+    public Action tr;
+    public Action a;
+    public Action b;
+    public Action x;
+    public Action y;
+    public Action lb;
+    public Action rb;
+    public Action ltMin;
+    public Action ltMax;
+    public Action rtMin;
+    public Action rtMax;
 
     public static final Rule<Binding> rule = new ObjectRule<>(Binding::new)
-        .put("lsbXMin", (o, it) -> o.lsbXMin = it, KeyOrMouse.rule)
-        .put("lsbXMax", (o, it) -> o.lsbXMax = it, KeyOrMouse.rule)
-        .put("lsbYMin", (o, it) -> o.lsbYMin = it, KeyOrMouse.rule)
-        .put("lsbYMax", (o, it) -> o.lsbYMax = it, KeyOrMouse.rule)
-        .put("lsbXBMin", (o, it) -> o.lsbXBMin = it, KeyOrMouse.rule)
-        .put("lsbXBMax", (o, it) -> o.lsbXBMax = it, KeyOrMouse.rule)
-        .put("lsbYBMin", (o, it) -> o.lsbYBMin = it, KeyOrMouse.rule)
-        .put("lsbYBMax", (o, it) -> o.lsbYBMax = it, KeyOrMouse.rule)
-        .put("rsbXMin", (o, it) -> o.rsbXMin = it, KeyOrMouse.rule)
-        .put("rsbXMax", (o, it) -> o.rsbXMax = it, KeyOrMouse.rule)
-        .put("rsbYMin", (o, it) -> o.rsbYMin = it, KeyOrMouse.rule)
-        .put("rsbYMax", (o, it) -> o.rsbYMax = it, KeyOrMouse.rule)
-        .put("rsbXBMin", (o, it) -> o.rsbXBMin = it, KeyOrMouse.rule)
-        .put("rsbXBMax", (o, it) -> o.rsbXBMax = it, KeyOrMouse.rule)
-        .put("rsbYBMin", (o, it) -> o.rsbYBMin = it, KeyOrMouse.rule)
-        .put("rsbYBMax", (o, it) -> o.rsbYBMax = it, KeyOrMouse.rule)
-        .put("du", (o, it) -> o.du = it, KeyOrMouse.rule)
-        .put("dd", (o, it) -> o.dd = it, KeyOrMouse.rule)
-        .put("dl", (o, it) -> o.dl = it, KeyOrMouse.rule)
-        .put("dr", (o, it) -> o.dr = it, KeyOrMouse.rule)
-        .put("back", (o, it) -> o.back = it, KeyOrMouse.rule)
-        .put("guide", (o, it) -> o.guide = it, KeyOrMouse.rule)
-        .put("start", (o, it) -> o.start = it, KeyOrMouse.rule)
-        .put("tl", (o, it) -> o.tl = it, KeyOrMouse.rule)
-        .put("tr", (o, it) -> o.tr = it, KeyOrMouse.rule)
-        .put("a", (o, it) -> o.a = it, KeyOrMouse.rule)
-        .put("b", (o, it) -> o.b = it, KeyOrMouse.rule)
-        .put("x", (o, it) -> o.x = it, KeyOrMouse.rule)
-        .put("y", (o, it) -> o.y = it, KeyOrMouse.rule)
-        .put("lb", (o, it) -> o.lb = it, KeyOrMouse.rule)
-        .put("rb", (o, it) -> o.rb = it, KeyOrMouse.rule)
-        .put("ltMin", (o, it) -> o.ltMin = it, KeyOrMouse.rule)
-        .put("ltMax", (o, it) -> o.ltMax = it, KeyOrMouse.rule)
-        .put("rtMin", (o, it) -> o.rtMin = it, KeyOrMouse.rule)
-        .put("rtMax", (o, it) -> o.rtMax = it, KeyOrMouse.rule);
+        .put("lsbXMin", (o, it) -> o.lsbXMin = it, Action.rule)
+        .put("lsbXMax", (o, it) -> o.lsbXMax = it, Action.rule)
+        .put("lsbYMin", (o, it) -> o.lsbYMin = it, Action.rule)
+        .put("lsbYMax", (o, it) -> o.lsbYMax = it, Action.rule)
+        .put("lsbXBMin", (o, it) -> o.lsbXBMin = it, Action.rule)
+        .put("lsbXBMax", (o, it) -> o.lsbXBMax = it, Action.rule)
+        .put("lsbYBMin", (o, it) -> o.lsbYBMin = it, Action.rule)
+        .put("lsbYBMax", (o, it) -> o.lsbYBMax = it, Action.rule)
+        .put("rsbXMin", (o, it) -> o.rsbXMin = it, Action.rule)
+        .put("rsbXMax", (o, it) -> o.rsbXMax = it, Action.rule)
+        .put("rsbYMin", (o, it) -> o.rsbYMin = it, Action.rule)
+        .put("rsbYMax", (o, it) -> o.rsbYMax = it, Action.rule)
+        .put("rsbXBMin", (o, it) -> o.rsbXBMin = it, Action.rule)
+        .put("rsbXBMax", (o, it) -> o.rsbXBMax = it, Action.rule)
+        .put("rsbYBMin", (o, it) -> o.rsbYBMin = it, Action.rule)
+        .put("rsbYBMax", (o, it) -> o.rsbYBMax = it, Action.rule)
+        .put("du", (o, it) -> o.du = it, Action.rule)
+        .put("dd", (o, it) -> o.dd = it, Action.rule)
+        .put("dl", (o, it) -> o.dl = it, Action.rule)
+        .put("dr", (o, it) -> o.dr = it, Action.rule)
+        .put("back", (o, it) -> o.back = it, Action.rule)
+        .put("guide", (o, it) -> o.guide = it, Action.rule)
+        .put("start", (o, it) -> o.start = it, Action.rule)
+        .put("tl", (o, it) -> o.tl = it, Action.rule)
+        .put("tr", (o, it) -> o.tr = it, Action.rule)
+        .put("a", (o, it) -> o.a = it, Action.rule)
+        .put("b", (o, it) -> o.b = it, Action.rule)
+        .put("x", (o, it) -> o.x = it, Action.rule)
+        .put("y", (o, it) -> o.y = it, Action.rule)
+        .put("lb", (o, it) -> o.lb = it, Action.rule)
+        .put("rb", (o, it) -> o.rb = it, Action.rule)
+        .put("ltMin", (o, it) -> o.ltMin = it, Action.rule)
+        .put("ltMax", (o, it) -> o.ltMax = it, Action.rule)
+        .put("rtMin", (o, it) -> o.rtMin = it, Action.rule)
+        .put("rtMax", (o, it) -> o.rtMax = it, Action.rule);
 
     public Binding() {
     }
 
     public Binding(Binding that) {
-        lsbXMin = KeyOrMouse.copyOf(that.lsbXMin);
-        lsbXMax = KeyOrMouse.copyOf(that.lsbXMax);
-        lsbYMin = KeyOrMouse.copyOf(that.lsbYMin);
-        lsbYMax = KeyOrMouse.copyOf(that.lsbYMax);
-        lsbXBMin = KeyOrMouse.copyOf(that.lsbXBMin);
-        lsbXBMax = KeyOrMouse.copyOf(that.lsbXBMax);
-        lsbYBMin = KeyOrMouse.copyOf(that.lsbYBMin);
-        lsbYBMax = KeyOrMouse.copyOf(that.lsbYBMax);
+        lsbXMin = Action.copyOf(that.lsbXMin);
+        lsbXMax = Action.copyOf(that.lsbXMax);
+        lsbYMin = Action.copyOf(that.lsbYMin);
+        lsbYMax = Action.copyOf(that.lsbYMax);
+        lsbXBMin = Action.copyOf(that.lsbXBMin);
+        lsbXBMax = Action.copyOf(that.lsbXBMax);
+        lsbYBMin = Action.copyOf(that.lsbYBMin);
+        lsbYBMax = Action.copyOf(that.lsbYBMax);
 
-        rsbXMin = KeyOrMouse.copyOf(that.rsbXMin);
-        rsbXMax = KeyOrMouse.copyOf(that.rsbXMax);
-        rsbYMin = KeyOrMouse.copyOf(that.rsbYMin);
-        rsbYMax = KeyOrMouse.copyOf(that.rsbYMax);
-        rsbXBMin = KeyOrMouse.copyOf(that.rsbXBMin);
-        rsbXBMax = KeyOrMouse.copyOf(that.rsbXBMax);
-        rsbYBMin = KeyOrMouse.copyOf(that.rsbYBMin);
-        rsbYBMax = KeyOrMouse.copyOf(that.rsbYBMax);
+        rsbXMin = Action.copyOf(that.rsbXMin);
+        rsbXMax = Action.copyOf(that.rsbXMax);
+        rsbYMin = Action.copyOf(that.rsbYMin);
+        rsbYMax = Action.copyOf(that.rsbYMax);
+        rsbXBMin = Action.copyOf(that.rsbXBMin);
+        rsbXBMax = Action.copyOf(that.rsbXBMax);
+        rsbYBMin = Action.copyOf(that.rsbYBMin);
+        rsbYBMax = Action.copyOf(that.rsbYBMax);
 
-        du = KeyOrMouse.copyOf(that.du);
-        dd = KeyOrMouse.copyOf(that.dd);
-        dl = KeyOrMouse.copyOf(that.dl);
-        dr = KeyOrMouse.copyOf(that.dr);
-        back = KeyOrMouse.copyOf(that.back);
-        guide = KeyOrMouse.copyOf(that.guide);
-        start = KeyOrMouse.copyOf(that.start);
-        tl = KeyOrMouse.copyOf(that.tl);
-        tr = KeyOrMouse.copyOf(that.tr);
-        a = KeyOrMouse.copyOf(that.a);
-        b = KeyOrMouse.copyOf(that.b);
-        x = KeyOrMouse.copyOf(that.x);
-        y = KeyOrMouse.copyOf(that.y);
-        lb = KeyOrMouse.copyOf(that.lb);
-        rb = KeyOrMouse.copyOf(that.rb);
-        ltMin = KeyOrMouse.copyOf(that.ltMin);
-        ltMax = KeyOrMouse.copyOf(that.ltMax);
-        rtMin = KeyOrMouse.copyOf(that.rtMin);
-        rtMax = KeyOrMouse.copyOf(that.rtMax);
+        du = Action.copyOf(that.du);
+        dd = Action.copyOf(that.dd);
+        dl = Action.copyOf(that.dl);
+        dr = Action.copyOf(that.dr);
+        back = Action.copyOf(that.back);
+        guide = Action.copyOf(that.guide);
+        start = Action.copyOf(that.start);
+        tl = Action.copyOf(that.tl);
+        tr = Action.copyOf(that.tr);
+        a = Action.copyOf(that.a);
+        b = Action.copyOf(that.b);
+        x = Action.copyOf(that.x);
+        y = Action.copyOf(that.y);
+        lb = Action.copyOf(that.lb);
+        rb = Action.copyOf(that.rb);
+        ltMin = Action.copyOf(that.ltMin);
+        ltMax = Action.copyOf(that.ltMax);
+        rtMin = Action.copyOf(that.rtMin);
+        rtMax = Action.copyOf(that.rtMax);
     }
 
-    public List<KeyOrMouseDataGroup> makeDataGroup() {
-        var ret = new ArrayList<KeyOrMouseDataGroup>();
+    public List<ActionDataGroup> makeDataGroup() {
+        var ret = new ArrayList<ActionDataGroup>();
 
         var lsbX = createGroup(ret);
         assignGroup(lsbXMin, lsbX);
@@ -183,15 +183,15 @@ public class Binding implements JSONObject {
         return ret;
     }
 
-    private static KeyOrMouseDataGroup createGroup(List<KeyOrMouseDataGroup> groups) {
-        var ret = new KeyOrMouseDataGroup();
+    private static ActionDataGroup createGroup(List<ActionDataGroup> groups) {
+        var ret = new ActionDataGroup();
         groups.add(ret);
         return ret;
     }
 
-    private void assignGroup(KeyOrMouse km, KeyOrMouseDataGroup group) {
-        if (km == null) return;
-        km.group = group;
+    private void assignGroup(Action action, ActionDataGroup group) {
+        if (action == null) return;
+        action.group = group;
     }
 
     @NotNull

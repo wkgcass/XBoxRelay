@@ -4,48 +4,48 @@ import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.entity.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import net.cassite.xboxrelay.ui.Binding;
-import net.cassite.xboxrelay.ui.KeyOrMouse;
+import net.cassite.xboxrelay.ui.Action;
 import net.cassite.xboxrelay.ui.MouseMove;
 
 public class TowerOfFantasyBinding extends Binding {
     public TowerOfFantasyBinding() {
-        b = new KeyOrMouse(new Key(MouseButton.PRIMARY));
-        y = new KeyOrMouse(new Key(KeyCode.KEY_1));
-        a = new KeyOrMouse(new Key(KeyCode.SPACE));
-        x = new KeyOrMouse(new Key(KeyCode.SHIFT, true));
-        rtMin = new KeyOrMouse(new Key(KeyCode.KEY_2));
+        b = new Action(new Key(MouseButton.PRIMARY));
+        y = new Action(new Key(KeyCode.KEY_1));
+        a = new Action(new Key(KeyCode.SPACE));
+        x = new Action(new Key(KeyCode.SHIFT, true));
+        rtMin = new Action(new Key(KeyCode.KEY_2));
         rtMax = rtMin;
-        rb = new KeyOrMouse(new Key(KeyCode.KEY_3));
-        du = new KeyOrMouse(new Key(KeyCode.G));
-        dl = new KeyOrMouse(new Key(KeyCode.Q));
-        dr = new KeyOrMouse(new Key(KeyCode.R));
-        dd = new KeyOrMouse(new Key(KeyCode.R));
-        tl = new KeyOrMouse(new Key(KeyCode.V));
-        ltMin = new KeyOrMouse(new Key(MouseButton.PRIMARY));
+        rb = new Action(new Key(KeyCode.KEY_3));
+        du = new Action(new Key(KeyCode.G));
+        dl = new Action(new Key(KeyCode.Q));
+        dr = new Action(new Key(KeyCode.R));
+        dd = new Action(new Key(KeyCode.R));
+        tl = new Action(new Key(KeyCode.V));
+        ltMin = new Action(new Key(MouseButton.PRIMARY));
         ltMax = ltMin;
-        start = new KeyOrMouse(new Key(KeyCode.ESCAPE));
+        start = new Action(new Key(KeyCode.ESCAPE));
 
-        lsbXMin = new KeyOrMouse(new Key(KeyCode.D));
+        lsbXMin = new Action(new Key(KeyCode.D));
         lsbXMax = lsbXMin;
-        lsbYMin = new KeyOrMouse(new Key(KeyCode.W));
+        lsbYMin = new Action(new Key(KeyCode.W));
         lsbYMax = lsbYMin;
-        lsbXBMin = new KeyOrMouse(new Key(KeyCode.A));
+        lsbXBMin = new Action(new Key(KeyCode.A));
         lsbXBMax = lsbXBMin;
-        lsbYBMin = new KeyOrMouse(new Key(KeyCode.S));
+        lsbYBMin = new Action(new Key(KeyCode.S));
         lsbYBMax = lsbYBMin;
 
-        rsbXMin = new KeyOrMouse(new MouseMove(500, 0));
-        rsbXMax = new KeyOrMouse(new MouseMove(1500, 0));
-        rsbYMin = new KeyOrMouse(new MouseMove(0, -400));
-        rsbYMax = new KeyOrMouse(new MouseMove(0, -1200));
-        rsbXBMin = new KeyOrMouse(new MouseMove(-500, 0));
-        rsbXBMax = new KeyOrMouse(new MouseMove(-1500, 0));
-        rsbYBMin = new KeyOrMouse(new MouseMove(0, 400));
-        rsbYBMax = new KeyOrMouse(new MouseMove(0, 1200));
+        rsbXMin = new Action(new MouseMove(500, 0));
+        rsbXMax = new Action(new MouseMove(1500, 0));
+        rsbYMin = new Action(new MouseMove(0, -400));
+        rsbYMax = new Action(new MouseMove(0, -1200));
+        rsbXBMin = new Action(new MouseMove(-500, 0));
+        rsbXBMax = new Action(new MouseMove(-1500, 0));
+        rsbYBMin = new Action(new MouseMove(0, 400));
+        rsbYBMax = new Action(new MouseMove(0, 1200));
 
         // customize
-        tr = new KeyOrMouse(new Key(KeyCode.F));
-        lb = new KeyOrMouse(new Key(KeyCode.X));
-        back = new KeyOrMouse(new Key(KeyCode.ALT));
+        tr = new Action(new Key(KeyCode.F));
+        lb = new Action(new Key(KeyCode.X));
+        back = new Action(new Key(KeyCode.ALT));
     }
 }

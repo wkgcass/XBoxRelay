@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class AutoRobot {
     private final Binding binding;
-    private final List<KeyOrMouseDataGroup> groups;
+    private final List<ActionDataGroup> groups;
     private boolean isRunning = false;
     private final Timer timer;
     private final RobotWrapper robot;
@@ -81,7 +81,7 @@ public class AutoRobot {
             }
         }
 
-        private void handleMouseMove(long l, KeyOrMouseDataGroup g, int[] dxMouse, int[] dyMouse) {
+        private void handleMouseMove(long l, ActionDataGroup g, int[] dxMouse, int[] dyMouse) {
             if (g.lastMouseMovingTs == 0 || g.lastMouseMovingTs > l) {
                 g.lastMouseMovingTs = l;
                 return;
@@ -98,7 +98,7 @@ public class AutoRobot {
             g.lastMouseMovingTs = l;
         }
 
-        private void handleMouseWheel(long l, KeyOrMouseDataGroup g, int[] wheel) {
+        private void handleMouseWheel(long l, ActionDataGroup g, int[] wheel) {
             if (g.lastMouseWheelTs == 0 || g.lastMouseWheelTs > l) {
                 g.lastMouseWheelTs = l;
                 return;
@@ -114,7 +114,7 @@ public class AutoRobot {
         }
     }
 
-    private void cancel(KeyOrMouseDataGroup group) {
+    private void cancel(ActionDataGroup group) {
         var current = group.current;
         if (current == null) {
             return;
@@ -128,40 +128,40 @@ public class AutoRobot {
         group.level = TriggerLevel.OFF;
     }
 
-    private void apply(KeyOrMouseDataGroup group, KeyOrMouse km, TriggerLevel level) {
-        apply(group, km, null, level);
+    private void apply(ActionDataGroup group, Action action, TriggerLevel level) {
+        apply(group, action, null, level);
     }
 
-    private void apply(KeyOrMouseDataGroup group, KeyOrMouse km, KeyOrMouse backup, TriggerLevel level) {
-        if (km == null) {
-            km = backup;
+    private void apply(ActionDataGroup group, Action action, Action backup, TriggerLevel level) {
+        if (action == null) {
+            action = backup;
         }
-        if (km == null) {
+        if (action == null) {
             return;
         }
         if (group.current != null) {
-            if (Objects.equals(group.current, km)) {
+            if (Objects.equals(group.current, action)) {
                 group.level = level;
                 return;
             }
-            if (group.current.needToCancelForSwitchingTo(km)) {
+            if (group.current.needToCancelForSwitchingTo(action)) {
                 cancel(group);
             }
         }
-        group.current = km;
+        group.current = action;
         group.level = level;
-        final var fkm = km;
-        if (km.key != null) {
+        final var fkm = action;
+        if (action.key != null) {
             robot.press(fkm.key);
         }
     }
 
-    private void handleGradient(KeyOrMouse min, KeyOrMouse max, XBoxEvent event) {
+    private void handleGradient(Action min, Action max, XBoxEvent event) {
         handleGradient(min, max, null, null, event);
     }
 
-    private void handleGradient(KeyOrMouse min, KeyOrMouse max, KeyOrMouse bMin, KeyOrMouse bMax, XBoxEvent event) {
-        KeyOrMouseDataGroup group;
+    private void handleGradient(Action min, Action max, Action bMin, Action bMax, XBoxEvent event) {
+        ActionDataGroup group;
         if (min != null) {
             group = min.group;
         } else if (max != null) {
@@ -183,13 +183,13 @@ public class AutoRobot {
         }
     }
 
-    private void handleSwitch(KeyOrMouse km, XBoxEvent event) {
+    private void handleSwitch(Action action, XBoxEvent event) {
         var level = event.level;
-        var group = km.group;
+        var group = action.group;
         if (level == TriggerLevel.OFF) {
             cancel(group);
         } else {
-            apply(group, km, level);
+            apply(group, action, level);
         }
     }
 

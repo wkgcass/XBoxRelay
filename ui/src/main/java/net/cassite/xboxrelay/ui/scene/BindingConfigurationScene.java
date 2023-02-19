@@ -26,7 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.cassite.xboxrelay.ui.I18n;
-import net.cassite.xboxrelay.ui.KeyOrMouse;
+import net.cassite.xboxrelay.ui.Action;
 import net.cassite.xboxrelay.ui.MouseMove;
 import net.cassite.xboxrelay.ui.MouseWheel;
 import net.cassite.xboxrelay.ui.entity.BindingConfiguration;
@@ -219,7 +219,7 @@ public class BindingConfigurationScene extends VScene {
                     SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().invalidKey());
                     return;
                 }
-                conf.setter().accept(new KeyOrMouse(key));
+                conf.setter().accept(new Action(key));
             } else if (enableMouseMove.isSelected()) {
                 var xText = moveX.getText();
                 var yText = moveY.getText();
@@ -237,7 +237,7 @@ public class BindingConfigurationScene extends VScene {
                     SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().invalidMoveY());
                     return;
                 }
-                conf.setter().accept(new KeyOrMouse(new MouseMove(x, y)));
+                conf.setter().accept(new Action(new MouseMove(x, y)));
             } else if (enableMouseWheel.isSelected()) {
                 var amtText = scroll.getText();
                 double amt;
@@ -247,7 +247,7 @@ public class BindingConfigurationScene extends VScene {
                     SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().invalidMouseWheel());
                     return;
                 }
-                conf.setter().accept(new KeyOrMouse(new MouseWheel(amt)));
+                conf.setter().accept(new Action(new MouseWheel(amt)));
             } else {
                 conf.setter().accept(null);
             }

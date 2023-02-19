@@ -1,25 +1,25 @@
 package net.cassite.xboxrelay.ui.entity;
 
-import net.cassite.xboxrelay.ui.KeyOrMouse;
+import net.cassite.xboxrelay.ui.Action;
 
 import java.util.function.*;
 
-public record StickConfiguration(Supplier<KeyOrMouse> xMinGetter,
-                                 Supplier<KeyOrMouse> xMaxGetter,
-                                 Supplier<KeyOrMouse> xBMinGetter,
-                                 Supplier<KeyOrMouse> xBMaxGetter,
-                                 Supplier<KeyOrMouse> yMinGetter,
-                                 Supplier<KeyOrMouse> yMaxGetter,
-                                 Supplier<KeyOrMouse> yBMinGetter,
-                                 Supplier<KeyOrMouse> yBMaxGetter,
-                                 Consumer<KeyOrMouse> xMinSetter,
-                                 Consumer<KeyOrMouse> xMaxSetter,
-                                 Consumer<KeyOrMouse> xBMinSetter,
-                                 Consumer<KeyOrMouse> xBMaxSetter,
-                                 Consumer<KeyOrMouse> yMinSetter,
-                                 Consumer<KeyOrMouse> yMaxSetter,
-                                 Consumer<KeyOrMouse> yBMinSetter,
-                                 Consumer<KeyOrMouse> yBMaxSetter,
+public record StickConfiguration(Supplier<Action> xMinGetter,
+                                 Supplier<Action> xMaxGetter,
+                                 Supplier<Action> xBMinGetter,
+                                 Supplier<Action> xBMaxGetter,
+                                 Supplier<Action> yMinGetter,
+                                 Supplier<Action> yMaxGetter,
+                                 Supplier<Action> yBMinGetter,
+                                 Supplier<Action> yBMaxGetter,
+                                 Consumer<Action> xMinSetter,
+                                 Consumer<Action> xMaxSetter,
+                                 Consumer<Action> xBMinSetter,
+                                 Consumer<Action> xBMaxSetter,
+                                 Consumer<Action> yMinSetter,
+                                 Consumer<Action> yMaxSetter,
+                                 Consumer<Action> yBMinSetter,
+                                 Consumer<Action> yBMaxSetter,
                                  IntSupplier xMinPosGetter,
                                  IntSupplier xMaxPosGetter,
                                  IntSupplier xBMinPosGetter,

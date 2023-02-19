@@ -112,7 +112,7 @@ public class ShowConfigTableScene extends VScene {
         final int min;
         final int max;
 
-        private TableData(String name, KeyOrMouse actionMin) {
+        private TableData(String name, Action actionMin) {
             this(name, actionMin == null ? "" : actionMin.toString());
         }
 
@@ -121,8 +121,8 @@ public class ShowConfigTableScene extends VScene {
         }
 
         private TableData(String name,
-                          KeyOrMouse actionMin,
-                          KeyOrMouse actionMax,
+                          Action actionMin,
+                          Action actionMax,
                           int min, int max) {
             this(name,
                 actionMin == null ? "" : actionMin.toString(),

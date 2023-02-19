@@ -11,69 +11,69 @@ import vjson.util.ObjectBuilder;
 
 import java.util.Objects;
 
-public class KeyOrMouse implements JSONObject {
+public class Action implements JSONObject {
     public final Key key;
     public final MouseMove mouseMove;
     public final MouseWheel mouseWheel;
 
-    public static final Rule<KeyOrMouse> rule = ObjectRule.builder(KeyOrMouseBuilder::new, KeyOrMouseBuilder::build, builder -> builder
+    public static final Rule<Action> rule = ObjectRule.builder(ActionBuilder::new, ActionBuilder::build, builder -> builder
         .put("key", (o, it) -> o.key = it, Key.rule)
         .put("mouseMove", (o, it) -> o.mouseMove = it, MouseMove.rule)
         .put("mouseWheel", (o, it) -> o.mouseWheel = it, MouseWheel.rule)
     );
 
-    private static class KeyOrMouseBuilder {
+    private static class ActionBuilder {
         Key key;
         MouseMove mouseMove;
         MouseWheel mouseWheel;
 
-        KeyOrMouse build() {
+        Action build() {
             if (key != null) {
-                return new KeyOrMouse(key);
+                return new Action(key);
             } else if (mouseMove != null) {
-                return new KeyOrMouse(mouseMove);
+                return new Action(mouseMove);
             } else if (mouseWheel != null) {
-                return new KeyOrMouse(mouseWheel);
+                return new Action(mouseWheel);
             } else {
                 throw new IllegalStateException();
             }
         }
     }
 
-    public KeyOrMouseDataGroup group;
+    public ActionDataGroup group;
 
-    public KeyOrMouse(Key key) {
+    public Action(Key key) {
         this.key = key;
         this.mouseMove = null;
         this.mouseWheel = null;
     }
 
-    public KeyOrMouse(MouseMove mouseMove) {
+    public Action(MouseMove mouseMove) {
         this.key = null;
         this.mouseMove = mouseMove;
         this.mouseWheel = null;
     }
 
-    public KeyOrMouse(MouseWheel mouseWheel) {
+    public Action(MouseWheel mouseWheel) {
         this.key = null;
         this.mouseMove = null;
         this.mouseWheel = mouseWheel;
     }
 
-    private KeyOrMouse(Key key, MouseMove mouseMove, MouseWheel mouseWheel) {
+    private Action(Key key, MouseMove mouseMove, MouseWheel mouseWheel) {
         this.key = key;
         this.mouseMove = mouseMove;
         this.mouseWheel = mouseWheel;
     }
 
-    public boolean needToCancelForSwitchingTo(KeyOrMouse km) {
-        return (key != null || km.key != null) && Objects.equals(key, km.key);
+    public boolean needToCancelForSwitchingTo(Action action) {
+        return (key != null || action.key != null) && Objects.equals(key, action.key);
     }
 
-    public static KeyOrMouse copyOf(KeyOrMouse o) {
+    public static Action copyOf(Action o) {
         if (o == null)
             return null;
-        return new KeyOrMouse(o.key, o.mouseMove, o.mouseWheel);
+        return new Action(o.key, o.mouseMove, o.mouseWheel);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class KeyOrMouse implements JSONObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        KeyOrMouse that = (KeyOrMouse) o;
+        Action that = (Action) o;
 
         if (!Objects.equals(key, that.key)) return false;
         if (!Objects.equals(mouseMove, that.mouseMove)) return false;
