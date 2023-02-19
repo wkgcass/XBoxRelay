@@ -12,6 +12,8 @@ public class FXMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         ImageManager.get().load("/net/cassite/xboxrelay/ui/res/xbox.png");
+        var icon = ImageManager.get().load("/net/cassite/xboxrelay/ui/res/icon.png");
+        primaryStage.getIcons().add(icon);
 
         var vertx = Vertx.vertx();
 

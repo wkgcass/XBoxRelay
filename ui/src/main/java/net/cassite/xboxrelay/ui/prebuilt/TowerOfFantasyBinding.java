@@ -21,7 +21,6 @@ public class TowerOfFantasyBinding extends Binding {
         dr = new KeyOrMouse(new Key(KeyCode.R));
         dd = new KeyOrMouse(new Key(KeyCode.R));
         tl = new KeyOrMouse(new Key(KeyCode.V));
-        tr = new KeyOrMouse(new Key(KeyCode.F2));
         ltMin = new KeyOrMouse(new Key(MouseButton.PRIMARY));
         ltMax = ltMin;
         start = new KeyOrMouse(new Key(KeyCode.ESCAPE));
@@ -45,7 +44,8 @@ public class TowerOfFantasyBinding extends Binding {
         rsbYBMax = new KeyOrMouse(new MouseMove(0, 1200));
 
         // customize
-        back = new KeyOrMouse(new Key(KeyCode.F));
-        lb = new KeyOrMouse(new Key(KeyCode.CONTROL));
+        tr = new KeyOrMouse(new Key(KeyCode.F));
+        lb = new KeyOrMouse(new Key(KeyCode.X));
+        back = new KeyOrMouse(new Key(KeyCode.ALT));
     }
 }
