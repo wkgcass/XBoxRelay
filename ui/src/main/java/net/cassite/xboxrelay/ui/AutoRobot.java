@@ -5,7 +5,6 @@ import com.sun.jna.platform.win32.WinDef;
 import io.vproxy.vfx.robot.RobotWrapper;
 import io.vproxy.vfx.util.OSUtils;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import net.cassite.xboxrelay.base.TriggerLevel;
 import net.cassite.xboxrelay.base.XBoxEvent;
 
@@ -121,8 +120,7 @@ public class AutoRobot {
             return;
         }
         if (current.key != null) {
-            Platform.runLater(() ->
-                robot.release(current.key));
+            robot.release(current.key);
         }
         group.current = null;
         group.lastMouseMovingTs = 0;
@@ -154,7 +152,7 @@ public class AutoRobot {
         group.level = level;
         final var fkm = km;
         if (km.key != null) {
-            Platform.runLater(() -> robot.press(fkm.key));
+            robot.press(fkm.key);
         }
     }
 
