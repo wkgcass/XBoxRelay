@@ -67,7 +67,7 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
             // Logger.debug("no events triggerred");
             return;
         }
-        Logger.debug("sending events to " + remoteAddress() + ": " + events);
+        _Logger.debug("sending events to " + remoteAddress() + ": " + events);
         for (var e : events) {
             send(e);
         }
@@ -229,21 +229,21 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
         if (msg instanceof ConfigureMessage cmsg) {
             handle(cmsg);
         } else {
-            Logger.warn("received unexpected message: " + msg);
+            _Logger.warn("received unexpected message: " + msg);
         }
     }
 
     private void handle(ConfigureMessage msg) {
-        Logger.info("received configure message: " + msg + " from " + remoteAddress());
+        _Logger.info("received configure message: " + msg + " from " + remoteAddress());
         if (!msg.valid()) {
-            Logger.warn("received invalid configure message: " + msg + " from " + remoteAddress());
+            _Logger.warn("received invalid configure message: " + msg + " from " + remoteAddress());
             close();
             return;
         }
         if (lastConfiguration == null) {
             // first configure message
             if (!msg.validForInitialControlMessage()) {
-                Logger.warn("unexpected initial configure message: " + msg + "  from " + remoteAddress());
+                _Logger.warn("unexpected initial configure message: " + msg + "  from " + remoteAddress());
                 close();
                 return;
             }
@@ -253,6 +253,6 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
         } else {
             lastConfiguration.from(msg);
         }
-        Logger.info("applied configuration: " + lastConfiguration);
+        _Logger.info("applied configuration: " + lastConfiguration);
     }
 }

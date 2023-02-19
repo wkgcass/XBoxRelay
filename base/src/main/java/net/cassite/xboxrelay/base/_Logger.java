@@ -1,13 +1,13 @@
 package net.cassite.xboxrelay.base;
 
-public class Logger {
+public class _Logger {
     private static LoggerAdaptor adaptor;
 
-    private Logger() {
+    private _Logger() {
     }
 
     public static void setLoggerAdaptor(LoggerAdaptor adaptor) {
-        Logger.adaptor = adaptor;
+        _Logger.adaptor = adaptor;
     }
 
     public static void debug(String msg) {

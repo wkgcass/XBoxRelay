@@ -3,7 +3,7 @@ package net.cassite.xboxrelay.agent;
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetSocket;
 import net.cassite.xboxrelay.base.BaseVersion;
-import net.cassite.xboxrelay.base.Logger;
+import net.cassite.xboxrelay.base._Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
@@ -70,7 +70,7 @@ public class Main {
 
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
         var logger = LoggerFactory.getLogger("agent");
-        Logger.setLoggerAdaptor(new SLF4JLoggerAdaptor(logger));
+        _Logger.setLoggerAdaptor(new SLF4JLoggerAdaptor(logger));
 
         var manager = new NetSocketManager();
         var vertx = Vertx.vertx();
@@ -124,12 +124,12 @@ public class Main {
                 try {
                     line = stdout.readLine();
                 } catch (IOException e) {
-                    Logger.error("stdout stream received exception when reading", e);
+                    _Logger.error("stdout stream received exception when reading", e);
                     return;
                 }
                 if (line == null) {
                     // eof
-                    Logger.warn("stdout reaches eof");
+                    _Logger.warn("stdout reaches eof");
                     return;
                 }
                 line = line.trim();
@@ -148,12 +148,12 @@ public class Main {
             try {
                 n = stderr.read(buf);
             } catch (IOException e) {
-                Logger.error("stderr stream received exception when reading", e);
+                _Logger.error("stderr stream received exception when reading", e);
                 return;
             }
             if (n == -1) {
                 // eof
-                Logger.warn("stderr reaches eof");
+                _Logger.warn("stderr reaches eof");
                 return;
             }
             for (int i = 0; i < n; ++i) {
@@ -162,7 +162,7 @@ public class Main {
         });
         outThread.start();
         errThread.start();
-        Logger.info("xboxdrv launched");
+        _Logger.info("xboxdrv launched");
         outThread.join();
         errThread.join();
     }

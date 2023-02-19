@@ -27,7 +27,7 @@ public abstract class BaseNetSocketHandler {
     }
 
     private void handle(Buffer buffer) {
-        Logger.debug("received buffer from " + remoteAddress() + ": " + buffer);
+        _Logger.debug("received buffer from " + remoteAddress() + ": " + buffer);
         int offset = 0;
         loop:
         while (true) {
@@ -90,14 +90,14 @@ public abstract class BaseNetSocketHandler {
         try {
             msg = JSON.deserialize(new BufferCharStream(data), Message.messageTypeRule());
         } catch (Exception e) {
-            Logger.error("failed deserializing data " + data + " from " + sock.remoteAddress(), e);
+            _Logger.error("failed deserializing data " + data + " from " + sock.remoteAddress(), e);
             close();
             return;
         } finally {
             data = null;
         }
         if (msg instanceof HeartBeatMessage hb) {
-            Logger.debug("received heatbeat from " + sock.remoteAddress() + " " + msg);
+            _Logger.debug("received heatbeat from " + sock.remoteAddress() + " " + msg);
             if (hb.type == HeartBeatMessage.TYPE_PING) {
                 send(new HeartBeatMessage(HeartBeatMessage.TYPE_PONG));
             }
