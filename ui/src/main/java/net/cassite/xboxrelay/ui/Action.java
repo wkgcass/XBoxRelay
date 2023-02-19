@@ -117,6 +117,11 @@ public class Action implements JSONObject {
         return new Action(o);
     }
 
+    public Action setFnInput(InputData fnInput) {
+        this.fnInput = fnInput;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
