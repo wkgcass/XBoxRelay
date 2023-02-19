@@ -3,6 +3,7 @@ package net.cassite.xboxrelay.agent;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.net.NetServer;
+import io.vertx.core.net.NetServerOptions;
 
 public class AgentServer extends AbstractVerticle {
     private NetServer netServer;
@@ -16,7 +17,8 @@ public class AgentServer extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> startPromise) {
-        var netServer = vertx.createNetServer();
+        var netServer = vertx.createNetServer(new NetServerOptions()
+            .setIdleTimeout(10_000));
         netServer.connectHandler(sock -> {
             var handler = new AgentNetSocketHandler(vertx.getOrCreateContext(), sock);
             manager.register(handler);

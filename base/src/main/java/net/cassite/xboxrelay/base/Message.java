@@ -30,8 +30,13 @@ public abstract class Message implements JSONObject {
     public Buffer toBuffer() {
         var json = toJson().stringify().getBytes(StandardCharsets.UTF_8);
         int len = json.length;
-        var lenBuffer = Buffer.buffer(2);
-        lenBuffer.setShort(0, (short) len);
+        var lenBuffer = Buffer.buffer(3);
+        byte a = (byte) ((len >> 16) & 0xff);
+        byte b = (byte) ((len >> 8) & 0xff);
+        byte c = (byte) (len & 0xff);
+        lenBuffer.setByte(0, a);
+        lenBuffer.setByte(1, b);
+        lenBuffer.setByte(2, c);
         return lenBuffer.appendBuffer(Buffer.buffer(json));
     }
 }

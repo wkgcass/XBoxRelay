@@ -7,46 +7,42 @@ import vjson.deserializer.rule.Rule;
 import vjson.util.ObjectBuilder;
 
 public class ConfigureMessage extends Message {
-    public DeadZoneConfig min = null;
-    public DeadZoneConfig max = null;
+    public final DeadZoneSettings deadZoneSettings;
 
     public static final Rule<ConfigureMessage> rule = new ObjectRule<>(ConfigureMessage::new)
-        .put("min", (o, it) -> o.min = it, DeadZoneConfig.rule)
-        .put("max", (o, it) -> o.max = it, DeadZoneConfig.rule);
+        .put("min", (o, it) -> o.deadZoneSettings.min = it, DeadZoneConfig.rule)
+        .put("max", (o, it) -> o.deadZoneSettings.max = it, DeadZoneConfig.rule);
 
     public ConfigureMessage() {
+        this.deadZoneSettings = new DeadZoneSettings();
+    }
+
+    public ConfigureMessage(DeadZoneSettings deadZoneSettings) {
+        this.deadZoneSettings = new DeadZoneSettings(deadZoneSettings);
+    }
+
+    public DeadZoneConfig min() {
+        return deadZoneSettings.min;
+    }
+
+    public DeadZoneConfig max() {
+        return deadZoneSettings.max;
     }
 
     public boolean validForInitialControlMessage() {
-        return min != null && !min.isZero() && max != null && !max.isZero();
+        return deadZoneSettings.validForInitialControlMessage();
     }
 
-    @SuppressWarnings("RedundantIfStatement")
     public boolean valid() {
-        if (min != null) {
-            if (!min.valid()) {
-                return false;
-            }
-        }
-        if (max != null) {
-            if (!max.valid()) {
-                return false;
-            }
-        }
-        return true;
+        return deadZoneSettings.valid();
     }
 
     public void from(ConfigureMessage msg) {
-        if (min == null) {
-            min = msg.min;
-        } else if (msg.min != null) {
-            min.from(msg.min);
-        }
-        if (max == null) {
-            max = msg.max;
-        } else if (msg.max != null) {
-            max.from(msg.max);
-        }
+        deadZoneSettings.from(msg.deadZoneSettings);
+    }
+
+    public void from(DeadZoneSettings settings) {
+        deadZoneSettings.from(settings);
     }
 
     @NotNull
@@ -54,18 +50,17 @@ public class ConfigureMessage extends Message {
     public JSON.Object toJson() {
         var ob = new ObjectBuilder();
         ob.type("configure");
-        if (min != null && !min.isZero())
-            ob.putInst("min", min.toJson());
-        if (max != null && !max.isZero())
-            ob.putInst("max", max.toJson());
+        if (deadZoneSettings.min != null && !deadZoneSettings.min.isZero())
+            ob.putInst("min", deadZoneSettings.min.toJson());
+        if (deadZoneSettings.max != null && !deadZoneSettings.max.isZero())
+            ob.putInst("max", deadZoneSettings.max.toJson());
         return ob.build();
     }
 
     @Override
     public String toString() {
         return "ConfigureMessage{" +
-               "min=" + min +
-               ", max=" + max +
+               "deadZoneSettings=" + deadZoneSettings +
                '}';
     }
 }

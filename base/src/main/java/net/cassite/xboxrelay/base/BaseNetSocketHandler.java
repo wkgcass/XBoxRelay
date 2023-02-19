@@ -12,9 +12,11 @@ public abstract class BaseNetSocketHandler {
     private int state = 0;
     // 0: expecting length[0]
     // 1: expecting length[1]
-    // 2: expecting data
+    // 2: expecting length[2]
+    // 3: expecting data
 
     private byte lenA;
+    private byte lenB;
     private Buffer data;
     private int remainingDataLen;
 
@@ -25,6 +27,7 @@ public abstract class BaseNetSocketHandler {
     }
 
     private void handle(Buffer buffer) {
+        Logger.debug("received buffer from " + remoteAddress() + ": " + buffer);
         int offset = 0;
         loop:
         while (true) {
@@ -39,14 +42,22 @@ public abstract class BaseNetSocketHandler {
                     }
                 case 1:
                     if (buffer.length() > offset) {
-                        var lenB = buffer.getByte(offset);
+                        lenB = buffer.getByte(offset);
                         offset += 1;
                         state = 2;
-                        remainingDataLen = ((lenA & 0xff) << 16) | (lenB & 0xff);
                     } else {
                         break loop;
                     }
                 case 2:
+                    if (buffer.length() > offset) {
+                        var lenC = buffer.getByte(offset);
+                        offset += 1;
+                        state = 3;
+                        remainingDataLen = ((lenA & 0xff) << 16) | ((lenB & 0xff) << 8) | (lenC & 0xff);
+                    } else {
+                        break loop;
+                    }
+                case 3:
                     if (buffer.length() >= offset + remainingDataLen) {
                         var sub = buffer.slice(offset, offset + remainingDataLen);
                         if (data == null) {
@@ -86,7 +97,7 @@ public abstract class BaseNetSocketHandler {
             data = null;
         }
         if (msg instanceof HeartBeatMessage hb) {
-            Logger.debug("received heat beat from " + sock.remoteAddress() + " " + msg);
+            Logger.debug("received heatbeat from " + sock.remoteAddress() + " " + msg);
             if (hb.type == HeartBeatMessage.TYPE_PING) {
                 send(new HeartBeatMessage(HeartBeatMessage.TYPE_PONG));
             }

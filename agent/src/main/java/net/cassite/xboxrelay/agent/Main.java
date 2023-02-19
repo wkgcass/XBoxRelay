@@ -133,11 +133,11 @@ public class Main {
                     return;
                 }
                 line = line.trim();
-                Logger.debug("xboxdrv produced line: " + line);
+                // Logger.debug("xboxdrv produced line: " + line);
                 var data = new XBoxDrvData();
                 var ok = data.fromLine(line);
                 if (ok) {
-                    Logger.debug(data.toString());
+                    // Logger.debug(data.toString());
                     manager.onXBoxDrvData(data);
                 }
             }

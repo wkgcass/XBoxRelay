@@ -4,7 +4,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetClientOptions;
+import io.vertx.core.net.NetSocket;
 import net.cassite.xboxrelay.base.ConfigureMessage;
+import net.cassite.xboxrelay.base.HeartBeatMessage;
+import net.cassite.xboxrelay.base.Logger;
 
 public class ClientVerticle extends AbstractVerticle {
     private final String host;
@@ -13,6 +16,8 @@ public class ClientVerticle extends AbstractVerticle {
     private final AutoRobot robot;
     private final Runnable closeCallback;
     private NetClient client;
+    private NetSocket socket;
+    private long heartbeatPeriodicHandle = 0;
 
     public ClientVerticle(String addr, ConfigureMessage config, AutoRobot robot, Runnable closeCallback) {
         int index = addr.lastIndexOf(":");
@@ -36,18 +41,20 @@ public class ClientVerticle extends AbstractVerticle {
     public void start(Promise<Void> startPromise) {
         var client = vertx.createNetClient(new NetClientOptions()
             .setConnectTimeout(5_000)
-            .setIdleTimeout(900_000));
+            .setIdleTimeout(10_000));
         client.connect(port, host).andThen(r -> {
             if (r.succeeded()) {
                 startPromise.complete();
                 var sock = r.result();
                 sock.closeHandler(v -> closeCallback.run());
                 new ClientSocketHandler(vertx.getOrCreateContext(), sock, config, robot);
+                this.socket = sock;
             } else {
                 startPromise.fail(r.cause());
             }
         });
         this.client = client;
+        this.heartbeatPeriodicHandle = vertx.setPeriodic(4_000, l -> heartbeat());
     }
 
     @Override
@@ -58,6 +65,14 @@ public class ClientVerticle extends AbstractVerticle {
             client.close().andThen(stopPromise);
         } else {
             stopPromise.complete();
+        }
+        vertx.cancelTimer(heartbeatPeriodicHandle);
+    }
+
+    private void heartbeat() {
+        if (socket != null) {
+            Logger.debug("sending heartbeat msg");
+            socket.write(new HeartBeatMessage(HeartBeatMessage.TYPE_PING).toBuffer());
         }
     }
 }

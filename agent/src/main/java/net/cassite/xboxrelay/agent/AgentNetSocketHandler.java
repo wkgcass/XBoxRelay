@@ -64,7 +64,7 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
         checkRT(data, c, events);
 
         if (events.isEmpty()) {
-            Logger.debug("no events triggerred");
+            // Logger.debug("no events triggerred");
             return;
         }
         Logger.debug("sending events to " + remoteAddress() + ": " + events);
@@ -74,19 +74,19 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
     }
 
     private void checkX1(XBoxDrvData data, ArrayList<XBoxEvent> events, ConfigureMessage c) {
-        checkInt(data.x1, lsbX, c.min.lsbX, c.max.lsbX, XBoxKey.lsbX, events, v -> lsbX = v);
+        checkInt(data.x1, lsbX, c.min().lsbX, c.max().lsbX, c.min().lsbXB, c.max().lsbXB, XBoxKey.lsbX, events, v -> lsbX = v);
     }
 
     private void checkY1(XBoxDrvData data, ArrayList<XBoxEvent> events, ConfigureMessage c) {
-        checkInt(data.y1, lsbY, c.min.lsbY, c.max.lsbY, XBoxKey.lsbY, events, v -> lsbY = v);
+        checkInt(data.y1, lsbY, c.min().lsbY, c.max().lsbY, c.min().lsbYB, c.max().lsbYB, XBoxKey.lsbY, events, v -> lsbY = v);
     }
 
     private void checkX2(XBoxDrvData data, ArrayList<XBoxEvent> events, ConfigureMessage c) {
-        checkInt(data.x2, rsbX, c.min.rsbX, c.max.rsbX, XBoxKey.rsbX, events, v -> rsbX = v);
+        checkInt(data.x2, rsbX, c.min().rsbX, c.max().rsbX, c.min().rsbXB, c.max().rsbXB, XBoxKey.rsbX, events, v -> rsbX = v);
     }
 
     private void checkY2(XBoxDrvData data, ArrayList<XBoxEvent> events, ConfigureMessage c) {
-        checkInt(data.y2, rsbY, c.min.rsbY, c.max.rsbY, XBoxKey.rsbY, events, v -> rsbY = v);
+        checkInt(data.y2, rsbY, c.min().rsbY, c.max().rsbY, c.min().rsbYB, c.max().rsbYB, XBoxKey.rsbY, events, v -> rsbY = v);
     }
 
     private void checkDU(XBoxDrvData data, ArrayList<XBoxEvent> events) {
@@ -150,11 +150,11 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
     }
 
     private void checkLT(XBoxDrvData data, ConfigureMessage c, ArrayList<XBoxEvent> events) {
-        checkInt(data.lt, lt, c.min.lt, c.max.lt, XBoxKey.lt, events, v -> lt = v);
+        checkInt(data.lt, lt, c.min().lt, c.max().lt, 0, 0, XBoxKey.lt, events, v -> lt = v);
     }
 
     private void checkRT(XBoxDrvData data, ConfigureMessage c, ArrayList<XBoxEvent> events) {
-        checkInt(data.rt, rt, c.min.rt, c.max.rt, XBoxKey.rt, events, v -> rt = v);
+        checkInt(data.rt, rt, c.min().rt, c.max().rt, 0, 0, XBoxKey.rt, events, v -> rt = v);
     }
 
     private void checkBool(boolean data, boolean current, XBoxKey key, ArrayList<XBoxEvent> events, BooleanConsumer setter) {
@@ -176,7 +176,12 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
         void accept(boolean v);
     }
 
-    private void checkInt(int dataInt, TriggerLevel current, int configMinInt, int configMaxInt, XBoxKey key, ArrayList<XBoxEvent> events, Consumer<TriggerLevel> setter) {
+    private void checkInt(int dataInt, TriggerLevel current,
+                          int configMinInt, int configMaxInt,
+                          int configMinBInt, int configMaxBInt,
+                          XBoxKey key,
+                          ArrayList<XBoxEvent> events,
+                          Consumer<TriggerLevel> setter) {
         if (dataInt == 0) {
             if (current != TriggerLevel.OFF) {
                 events.add(new XBoxEvent(key, TriggerLevel.OFF));
@@ -200,12 +205,12 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
                 }
             }
         } else {
-            if (dataInt > -configMinInt) {
+            if (dataInt > -configMinBInt) {
                 if (current != TriggerLevel.OFF) {
                     events.add(new XBoxEvent(key, TriggerLevel.OFF));
                     setter.accept(TriggerLevel.OFF);
                 }
-            } else if (dataInt < -configMaxInt) {
+            } else if (dataInt < -configMaxBInt) {
                 if (current != TriggerLevel.B_MAX) {
                     events.add(new XBoxEvent(key, TriggerLevel.B_MAX));
                     setter.accept(TriggerLevel.B_MAX);
@@ -229,16 +234,16 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
     }
 
     private void handle(ConfigureMessage msg) {
-        Logger.info("received configure message: " + msg);
+        Logger.info("received configure message: " + msg + " from " + remoteAddress());
         if (!msg.valid()) {
-            Logger.warn("received invalid configure message: " + msg);
+            Logger.warn("received invalid configure message: " + msg + " from " + remoteAddress());
             close();
             return;
         }
         if (lastConfiguration == null) {
             // first configure message
             if (!msg.validForInitialControlMessage()) {
-                Logger.warn("unexpected initial configure message: " + msg);
+                Logger.warn("unexpected initial configure message: " + msg + "  from " + remoteAddress());
                 close();
                 return;
             }

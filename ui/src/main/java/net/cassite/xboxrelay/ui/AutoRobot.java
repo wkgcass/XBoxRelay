@@ -9,12 +9,12 @@ import javafx.application.Platform;
 import net.cassite.xboxrelay.base.TriggerLevel;
 import net.cassite.xboxrelay.base.XBoxEvent;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class AutoRobot {
     private final Binding binding;
-    private final Set<KeyOrMouseMoveDataGroup> groups;
+    private final List<KeyOrMouseDataGroup> groups;
     private boolean isRunning = false;
     private final Timer timer;
     private final RobotWrapper robot;
@@ -48,45 +48,74 @@ public class AutoRobot {
     private class Timer extends AnimationTimer {
         @Override
         public void handle(long l) {
-            var dxMouse = 0d;
-            var dyMouse = 0d;
+            var dxMouse = new int[]{0};
+            var dyMouse = new int[]{0};
+            var wheel = new int[]{0};
             for (var g : groups) {
                 var current = g.current;
                 if (current == null) {
                     continue;
                 }
-                if (current.mouseMove == null) {
-                    continue;
+                if (current.mouseMove != null) {
+                    handleMouseMove(l, g, dxMouse, dyMouse);
                 }
-                if (g.lastTs == 0 || g.lastTs > l) {
-                    g.lastTs = l;
-                    continue;
+                if (current.mouseWheel != null) {
+                    handleMouseWheel(l, g, wheel);
                 }
-                var delta = l - g.lastTs;
-                g.lastTs = l;
-                var dx = current.mouseMove.x / 1000d * (delta / 1_000_000d);
-                var dy = current.mouseMove.y / 1000d * (delta / 1_000_000d);
-                dxMouse += dx;
-                dyMouse += dy;
             }
-            if (dxMouse != 0 || dyMouse != 0) {
+            if (dxMouse[0] != 0 || dyMouse[0] != 0) {
                 if (OSUtils.isWindows()) {
                     JNAMouseEvent.User32.INSTANCE.mouse_event(new WinDef.DWORD(JNAMouseEvent.User32.MOUSEEVENTF_MOVE),
-                        new WinDef.DWORD((long) dxMouse), new WinDef.DWORD((long) dyMouse),
+                        new WinDef.DWORD(dxMouse[0]), new WinDef.DWORD(dyMouse[0]),
                         new WinDef.DWORD(0), new BaseTSD.ULONG_PTR(0));
                 } else {
                     var mousePoint2D = robot.getMousePosition();
                     var mouseX = mousePoint2D.getX();
                     var mouseY = mousePoint2D.getY();
-                    mouseX += dxMouse;
-                    mouseY += dyMouse;
+                    mouseX += dxMouse[0];
+                    mouseY += dyMouse[0];
                     robot.mouseMove(mouseX, mouseY);
                 }
             }
+            if (wheel[0] != 0) {
+                robot.mouseWheel(wheel[0]);
+            }
+        }
+
+        private void handleMouseMove(long l, KeyOrMouseDataGroup g, int[] dxMouse, int[] dyMouse) {
+            if (g.lastMouseMovingTs == 0 || g.lastMouseMovingTs > l) {
+                g.lastMouseMovingTs = l;
+                return;
+            }
+            var current = g.current;
+            var delta = l - g.lastMouseMovingTs;
+            var dx = Math.round(current.mouseMove.x / 1000d * (delta / 1_000_000d));
+            var dy = Math.round(current.mouseMove.y / 1000d * (delta / 1_000_000d));
+            if ((dx == 0 && current.mouseMove.x != 0) || (dy == 0 && current.mouseMove.y != 0)) {
+                return;
+            }
+            dxMouse[0] += dx;
+            dyMouse[0] += dy;
+            g.lastMouseMovingTs = l;
+        }
+
+        private void handleMouseWheel(long l, KeyOrMouseDataGroup g, int[] wheel) {
+            if (g.lastMouseWheelTs == 0 || g.lastMouseWheelTs > l) {
+                g.lastMouseWheelTs = l;
+                return;
+            }
+            var current = g.current;
+            var delta = l - g.lastMouseWheelTs;
+            var d = Math.round(current.mouseWheel.wheelAmt / 1000d * (delta / 1_000_000d));
+            if (d == 0 && current.mouseWheel.wheelAmt != 0) {
+                return;
+            }
+            wheel[0] += d;
+            g.lastMouseWheelTs = l;
         }
     }
 
-    private void cancel(KeyOrMouseMoveDataGroup group) {
+    private void cancel(KeyOrMouseDataGroup group) {
         var current = group.current;
         if (current == null) {
             return;
@@ -96,11 +125,19 @@ public class AutoRobot {
                 robot.release(current.key));
         }
         group.current = null;
-        group.lastTs = 0;
+        group.lastMouseMovingTs = 0;
+        group.lastMouseWheelTs = 0;
         group.level = TriggerLevel.OFF;
     }
 
-    private void apply(KeyOrMouseMoveDataGroup group, KeyOrMouseMove km, TriggerLevel level) {
+    private void apply(KeyOrMouseDataGroup group, KeyOrMouse km, TriggerLevel level) {
+        apply(group, km, null, level);
+    }
+
+    private void apply(KeyOrMouseDataGroup group, KeyOrMouse km, KeyOrMouse backup, TriggerLevel level) {
+        if (km == null) {
+            km = backup;
+        }
         if (km == null) {
             return;
         }
@@ -115,28 +152,40 @@ public class AutoRobot {
         }
         group.current = km;
         group.level = level;
+        final var fkm = km;
         if (km.key != null) {
-            Platform.runLater(() -> robot.press(km.key));
+            Platform.runLater(() -> robot.press(fkm.key));
         }
     }
 
-    private void handleGradient(KeyOrMouseMove min, KeyOrMouseMove max, XBoxEvent event) {
+    private void handleGradient(KeyOrMouse min, KeyOrMouse max, XBoxEvent event) {
         handleGradient(min, max, null, null, event);
     }
 
-    private void handleGradient(KeyOrMouseMove min, KeyOrMouseMove max, KeyOrMouseMove bMin, KeyOrMouseMove bMax, XBoxEvent event) {
+    private void handleGradient(KeyOrMouse min, KeyOrMouse max, KeyOrMouse bMin, KeyOrMouse bMax, XBoxEvent event) {
+        KeyOrMouseDataGroup group;
+        if (min != null) {
+            group = min.group;
+        } else if (max != null) {
+            group = max.group;
+        } else if (bMin != null) {
+            group = bMin.group;
+        } else if (bMax != null) {
+            group = bMax.group;
+        } else { // nothing to be handled
+            return;
+        }
         var level = event.level;
-        var group = min.group; // max.group == min.group
         switch (level) {
             case OFF -> cancel(group);
             case MIN -> apply(group, min, level);
-            case MAX -> apply(group, max, level);
+            case MAX -> apply(group, max, min, level);
             case B_MIN -> apply(group, bMin, level);
             case B_MAX -> apply(group, bMax, level);
         }
     }
 
-    private void handleSwitch(KeyOrMouseMove km, XBoxEvent event) {
+    private void handleSwitch(KeyOrMouse km, XBoxEvent event) {
         var level = event.level;
         var group = km.group;
         if (level == TriggerLevel.OFF) {
