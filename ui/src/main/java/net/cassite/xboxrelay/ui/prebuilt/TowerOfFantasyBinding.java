@@ -13,7 +13,7 @@ public class TowerOfFantasyBinding extends Binding {
         b = new Action(new Key(MouseButton.PRIMARY)).setFnInput(new InputData(false, false, false, new Key(KeyCode.F)));
         y = new Action(new Key(KeyCode.KEY_1)).setFnInput(new InputData(false, false, false, new Key(KeyCode.X)));
         a = new Action(new Key(KeyCode.SPACE)).setFnInput(new InputData(false, false, false, new Key(KeyCode.CONTROL, true)));
-        x = new Action(new Key(KeyCode.SHIFT, true));
+        x = new Action(new Key(MouseButton.SECONDARY));
         rtMin = new Action(new Key(KeyCode.KEY_2));
         rtMax = rtMin;
         rb = new Action(new Key(KeyCode.KEY_3));
