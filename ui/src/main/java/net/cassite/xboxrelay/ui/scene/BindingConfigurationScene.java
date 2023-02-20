@@ -209,7 +209,7 @@ public class BindingConfigurationScene extends VScene {
                 FontManager.get().setFont(this);
                 FXUtils.disableFocusColor(this);
             }};
-            enableFN.setPrefWidth(150);
+            enableFN.setPrefWidth(200);
 
             if (config != null && config.fn) {
                 enableFN.setSelected(true);
