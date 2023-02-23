@@ -8,5 +8,5 @@ compileJava {
 }
 
 jar {
-    archiveName "vproxy-base.jar"
+    archiveName "xboxrelay-base.jar"
 }

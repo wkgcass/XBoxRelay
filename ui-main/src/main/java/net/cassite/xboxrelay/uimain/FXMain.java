@@ -1,4 +1,4 @@
-package net.cassite.xboxrelay.ui;
+package net.cassite.xboxrelay.uimain;
 
 import io.vertx.core.Vertx;
 import io.vproxy.vfx.manager.image.ImageManager;
@@ -7,6 +7,8 @@ import io.vproxy.vfx.ui.stage.VStage;
 import io.vproxy.vfx.ui.stage.VStageInitParams;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import net.cassite.xboxrelay.ui.ConfigureScene;
+import net.cassite.xboxrelay.ui.I18n;
 
 public class FXMain extends Application {
     @Override
