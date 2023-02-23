@@ -5,5 +5,7 @@ module net.cassite.xboxrelay.uimain {
     requires io.vproxy.vfx;
     requires io.vertx.core;
 
+    opens net.cassite.xboxrelay.uimain.dll;
+
     exports net.cassite.xboxrelay.uimain;
 }
