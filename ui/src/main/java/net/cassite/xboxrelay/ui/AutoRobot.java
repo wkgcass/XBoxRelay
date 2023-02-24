@@ -121,11 +121,15 @@ public class AutoRobot {
     }
 
     private void cancel(ActionDataGroup group) {
+        cancel(group, true);
+    }
+
+    private void cancel(ActionDataGroup group, boolean release) {
         var current = group.current;
         if (current == null) {
             return;
         }
-        if (current.key != null) {
+        if (current.key != null && release) {
             robot.release(current.key);
         }
         group.current = null;
@@ -146,6 +150,7 @@ public class AutoRobot {
             return;
         }
         if (fnEnabled) {
+            group.current = action;
             return;
         }
         if (action.fn) {
@@ -211,12 +216,28 @@ public class AutoRobot {
                     } else if (group.current == bMax) {
                         triggerFnInput(bMax);
                     }
+                    cancel(group, false);
+                } else {
+                    cancel(group);
                 }
-                cancel(group);
             }
-            case MIN -> apply(group, min, level);
+            case MIN -> {
+                if (fnEnabled && group.current == max) {
+                    triggerFnInput(max);
+                    cancel(group, false);
+                } else {
+                    apply(group, min, level);
+                }
+            }
             case MAX -> apply(group, max, min, level);
-            case B_MIN -> apply(group, bMin, level);
+            case B_MIN -> {
+                if (fnEnabled && group.current == bMax) {
+                    triggerFnInput(bMax);
+                    cancel(group, false);
+                } else {
+                    apply(group, bMin, level);
+                }
+            }
             case B_MAX -> apply(group, bMax, level);
         }
     }
@@ -225,8 +246,12 @@ public class AutoRobot {
         var level = event.level;
         var group = action.group;
         if (level == TriggerLevel.OFF) {
-            triggerFnInput(action);
-            cancel(group);
+            if (fnEnabled) {
+                triggerFnInput(action);
+                cancel(group, false);
+            } else {
+                cancel(group);
+            }
         } else {
             apply(group, action, level);
         }
