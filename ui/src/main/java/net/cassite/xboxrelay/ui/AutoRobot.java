@@ -21,6 +21,7 @@ public class AutoRobot {
     private final RobotWrapper robot;
     private boolean fnEnabled = false;
     private boolean isHandlingFnInput = false;
+    private final State state = new State();
 
     public AutoRobot(Binding binding) {
         this.binding = new Binding(binding);
@@ -184,6 +185,11 @@ public class AutoRobot {
         group.current = action;
     }
 
+    private void disableFn() {
+        fnEnabled = false;
+        state.apply(this);
+    }
+
     private void handleGradient(Action min, Action max, XBoxEvent event) {
         handleGradient(min, max, null, null, event);
     }
@@ -258,7 +264,7 @@ public class AutoRobot {
     private void triggerFnInput(Action action) {
         if (action.fn) {
             // the fn action triggers fn input means to cancel the fn state
-            fnEnabled = false;
+            disableFn();
             return;
         }
         if (!fnEnabled) {
@@ -310,86 +316,107 @@ public class AutoRobot {
     }
 
     public void lsbX(XBoxEvent event) {
+        state.lsbX(event.level);
         handleGradient(binding.lsbXMin, binding.lsbXMax, binding.lsbXBMin, binding.lsbXBMax, event);
     }
 
     public void lsbY(XBoxEvent event) {
+        state.lsbY(event.level);
         handleGradient(binding.lsbYMin, binding.lsbYMax, binding.lsbYBMin, binding.lsbYBMax, event);
     }
 
     public void rsbX(XBoxEvent event) {
+        state.rsbX(event.level);
         handleGradient(binding.rsbXMin, binding.rsbXMax, binding.rsbXBMin, binding.rsbXBMax, event);
     }
 
     public void rsbY(XBoxEvent event) {
+        state.rsbY(event.level);
         handleGradient(binding.rsbYMin, binding.rsbYMax, binding.rsbYBMin, binding.rsbYBMax, event);
     }
 
     public void du(XBoxEvent event) {
+        state.du(event.level);
         handleSwitch(binding.du, event);
     }
 
     public void dd(XBoxEvent event) {
+        state.dd(event.level);
         handleSwitch(binding.dd, event);
     }
 
     public void dl(XBoxEvent event) {
+        state.dl(event.level);
         handleSwitch(binding.dl, event);
     }
 
     public void dr(XBoxEvent event) {
+        state.dr(event.level);
         handleSwitch(binding.dr, event);
     }
 
     public void back(XBoxEvent event) {
+        state.back(event.level);
         handleSwitch(binding.back, event);
     }
 
     public void guide(XBoxEvent event) {
+        state.guide(event.level);
         handleSwitch(binding.guide, event);
     }
 
     public void start(XBoxEvent event) {
+        state.start(event.level);
         handleSwitch(binding.start, event);
     }
 
     public void tl(XBoxEvent event) {
+        state.tl(event.level);
         handleSwitch(binding.tl, event);
     }
 
     public void tr(XBoxEvent event) {
+        state.tr(event.level);
         handleSwitch(binding.tr, event);
     }
 
     public void a(XBoxEvent event) {
+        state.a(event.level);
         handleSwitch(binding.a, event);
     }
 
     public void b(XBoxEvent event) {
+        state.b(event.level);
         handleSwitch(binding.b, event);
     }
 
     public void x(XBoxEvent event) {
+        state.x(event.level);
         handleSwitch(binding.x, event);
     }
 
     public void y(XBoxEvent event) {
+        state.y(event.level);
         handleSwitch(binding.y, event);
     }
 
     public void lb(XBoxEvent event) {
+        state.lb(event.level);
         handleSwitch(binding.lb, event);
     }
 
     public void rb(XBoxEvent event) {
+        state.rb(event.level);
         handleSwitch(binding.rb, event);
     }
 
     public void lt(XBoxEvent event) {
+        state.lt(event.level);
         handleGradient(binding.ltMin, binding.ltMax, event);
     }
 
     public void rt(XBoxEvent event) {
+        state.rt(event.level);
         handleGradient(binding.rtMin, binding.rtMax, event);
     }
 }
