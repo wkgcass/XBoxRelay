@@ -11,9 +11,7 @@ import javafx.animation.AnimationTimer;
 import net.cassite.xboxrelay.base.TriggerLevel;
 import net.cassite.xboxrelay.base.XBoxEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class AutoRobot {
     private final Binding binding;
@@ -278,26 +276,37 @@ public class AutoRobot {
         if (input.ctrl) {
             var ctrl = new Key(KeyCode.CONTROL);
             pressed.add(ctrl);
-            robot.press(ctrl);
         }
         if (input.alt) {
             var alt = new Key(KeyCode.ALT);
             pressed.add(alt);
-            robot.press(alt);
         }
         if (input.shift) {
             var shift = new Key(KeyCode.SHIFT);
             pressed.add(shift);
-            robot.press(shift);
         }
         pressed.add(input.key);
-        robot.press(input.key);
-        FXUtils.runDelay(50, () -> {
-            for (var k : pressed) {
-                robot.release(k);
-            }
+        handleFnInputPress(pressed.listIterator());
+    }
+
+    private void handleFnInputPress(ListIterator<Key> ite) {
+        if (!ite.hasNext()) {
+            handleFnInputRelease(ite);
+            return;
+        }
+        var key = ite.next();
+        robot.press(key);
+        FXUtils.runDelay(50, () -> handleFnInputPress(ite));
+    }
+
+    private void handleFnInputRelease(ListIterator<Key> ite) {
+        if (!ite.hasPrevious()) {
             isHandlingFnInput = false;
-        });
+            return;
+        }
+        var key = ite.previous();
+        robot.release(key);
+        handleFnInputRelease(ite);
     }
 
     public void lsbX(XBoxEvent event) {
