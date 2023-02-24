@@ -29,87 +29,160 @@ public class State {
     public TriggerLevel lt = OFF;
     public TriggerLevel rt = OFF;
 
+    private boolean paused;
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
     public void lsbX(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.lsbX = level;
     }
 
     public void lsbY(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.lsbY = level;
     }
 
     public void rsbX(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.rsbX = level;
     }
 
     public void rsbY(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.rsbY = level;
     }
 
     public void du(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.du = level;
     }
 
     public void dd(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.dd = level;
     }
 
     public void dl(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.dl = level;
     }
 
     public void dr(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.dr = level;
     }
 
     public void back(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.back = level;
     }
 
     public void guide(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.guide = level;
     }
 
     public void start(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.start = level;
     }
 
     public void tl(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.tl = level;
     }
 
     public void tr(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.tr = level;
     }
 
     public void a(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.a = level;
     }
 
     public void b(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.b = level;
     }
 
     public void x(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.x = level;
     }
 
     public void y(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.y = level;
     }
 
     public void lb(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.lb = level;
     }
 
     public void rb(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.rb = level;
     }
 
     public void lt(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.lt = level;
     }
 
     public void rt(TriggerLevel level) {
+        if (paused && level != OFF) {
+            return;
+        }
         this.rt = level;
     }
 

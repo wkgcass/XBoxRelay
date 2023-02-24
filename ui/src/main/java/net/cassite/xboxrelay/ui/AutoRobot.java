@@ -178,6 +178,7 @@ public class AutoRobot {
             return;
         }
         fnEnabled = true;
+        state.setPaused(true);
         // cancel all
         for (var g : groups) {
             cancel(g);
@@ -187,6 +188,7 @@ public class AutoRobot {
 
     private void disableFn() {
         fnEnabled = false;
+        state.setPaused(false);
         state.apply(this);
     }
 
