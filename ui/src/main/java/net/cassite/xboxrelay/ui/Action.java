@@ -44,7 +44,9 @@ public class Action implements JSONObject {
             } else if (mouseWheel != null) {
                 ret = new Action(mouseWheel);
             } else if (fn) {
-                ret = new Action(true);
+                ret = Action.newFn();
+            } else if (fnInput != null) {
+                ret = Action.newEmpty();
             } else {
                 throw new IllegalStateException();
             }
