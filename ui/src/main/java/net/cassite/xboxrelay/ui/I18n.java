@@ -1,6 +1,6 @@
 package net.cassite.xboxrelay.ui;
 
-import io.vproxy.vfx.util.Singleton;
+import io.vproxy.commons.util.Singleton;
 
 public interface I18n {
     static I18n get() {

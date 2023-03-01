@@ -1,6 +1,7 @@
 package net.cassite.xboxrelay.ui;
 
 import io.vertx.core.Vertx;
+import io.vproxy.base.util.LogType;
 import io.vproxy.vfx.animation.AnimationGraph;
 import io.vproxy.vfx.animation.AnimationGraphBuilder;
 import io.vproxy.vfx.animation.AnimationNode;
@@ -14,7 +15,7 @@ import io.vproxy.vfx.ui.scene.*;
 import io.vproxy.vfx.ui.wrapper.FusionW;
 import io.vproxy.vfx.ui.wrapper.ThemeLabel;
 import io.vproxy.vfx.util.FXUtils;
-import io.vproxy.vfx.util.Logger;
+import io.vproxy.base.util.Logger;
 import io.vproxy.vfx.util.algebradata.DoubleData;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -557,7 +558,7 @@ public class ConfigureScene extends VScene {
             try {
                 vertx.deployVerticle(client).toCompletionStage().toCompletableFuture().get();
             } catch (Exception e) {
-                Logger.error("failed to deploy client verticle", e);
+                Logger.error(LogType.SYS_ERROR, "failed to deploy client verticle", e);
                 client = null;
                 connectButton.setDisable(false);
                 SimpleAlert.showAndWait(Alert.AlertType.ERROR, I18n.get().failedToStart());
@@ -585,7 +586,7 @@ public class ConfigureScene extends VScene {
             try {
                 vertx.undeploy(client.deploymentID()).toCompletionStage().toCompletableFuture().get();
             } catch (Exception e) {
-                Logger.error("failed to stop verticle", e);
+                Logger.error(LogType.SYS_ERROR, "failed to stop verticle", e);
             }
         }
         var robot = this.robot;

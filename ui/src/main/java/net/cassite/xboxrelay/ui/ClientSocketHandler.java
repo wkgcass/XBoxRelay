@@ -2,7 +2,8 @@ package net.cassite.xboxrelay.ui;
 
 import io.vertx.core.Context;
 import io.vertx.core.net.NetSocket;
-import io.vproxy.vfx.util.Logger;
+import io.vproxy.base.util.LogType;
+import io.vproxy.base.util.Logger;
 import javafx.application.Platform;
 import net.cassite.xboxrelay.base.BaseNetSocketHandler;
 import net.cassite.xboxrelay.base.ConfigureMessage;
@@ -21,10 +22,10 @@ public class ClientSocketHandler extends BaseNetSocketHandler {
     @Override
     protected void handle(Message msg) {
         if (!(msg instanceof XBoxEvent event)) {
-            Logger.warn("received unexpected message: " + msg);
+            Logger.warn(LogType.INVALID_EXTERNAL_DATA, "received unexpected message: " + msg);
             return;
         }
-        Logger.debug("received message: " + msg);
+        assert Logger.lowLevelDebug("received message: " + msg);
         Platform.runLater(() -> {
             switch (event.key) {
                 case lsbX -> robot.lsbX(event);

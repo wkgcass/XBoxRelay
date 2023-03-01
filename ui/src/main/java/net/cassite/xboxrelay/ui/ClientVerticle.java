@@ -7,7 +7,7 @@ import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
 import net.cassite.xboxrelay.base.ConfigureMessage;
 import net.cassite.xboxrelay.base.HeartBeatMessage;
-import io.vproxy.vfx.util.Logger;
+import io.vproxy.base.util.Logger;
 
 public class ClientVerticle extends AbstractVerticle {
     private final String host;
@@ -71,7 +71,7 @@ public class ClientVerticle extends AbstractVerticle {
 
     private void heartbeat() {
         if (socket != null) {
-            Logger.debug("sending heartbeat msg");
+            assert Logger.lowLevelDebug("sending heartbeat msg");
             socket.write(new HeartBeatMessage(HeartBeatMessage.TYPE_PING).toBuffer());
         }
     }

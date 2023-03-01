@@ -2,6 +2,8 @@ package net.cassite.xboxrelay.agent;
 
 import io.vertx.core.Context;
 import io.vertx.core.net.NetSocket;
+import io.vproxy.base.util.LogType;
+import io.vproxy.base.util.Logger;
 import net.cassite.xboxrelay.base.*;
 
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
             // Logger.debug("no events triggerred");
             return;
         }
-        _Logger.debug("sending events to " + remoteAddress() + ": " + events);
+        assert Logger.lowLevelDebug("sending events to " + remoteAddress() + ": " + events);
         for (var e : events) {
             send(e);
         }
@@ -229,21 +231,21 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
         if (msg instanceof ConfigureMessage cmsg) {
             handle(cmsg);
         } else {
-            _Logger.warn("received unexpected message: " + msg);
+            Logger.warn(LogType.INVALID_EXTERNAL_DATA, "received unexpected message: " + msg);
         }
     }
 
     private void handle(ConfigureMessage msg) {
-        _Logger.info("received configure message: " + msg + " from " + remoteAddress());
+        Logger.alert("received configure message: " + msg + " from " + remoteAddress());
         if (!msg.valid()) {
-            _Logger.warn("received invalid configure message: " + msg + " from " + remoteAddress());
+            Logger.warn(LogType.INVALID_EXTERNAL_DATA, "received invalid configure message: " + msg + " from " + remoteAddress());
             close();
             return;
         }
         if (lastConfiguration == null) {
             // first configure message
             if (!msg.validForInitialControlMessage()) {
-                _Logger.warn("unexpected initial configure message: " + msg + "  from " + remoteAddress());
+                Logger.warn(LogType.INVALID_EXTERNAL_DATA, "unexpected initial configure message: " + msg + "  from " + remoteAddress());
                 close();
                 return;
             }
@@ -253,6 +255,6 @@ public class AgentNetSocketHandler extends BaseNetSocketHandler {
         } else {
             lastConfiguration.from(msg);
         }
-        _Logger.info("applied configuration: " + lastConfiguration);
+        Logger.alert("applied configuration: " + lastConfiguration);
     }
 }

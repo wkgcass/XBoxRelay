@@ -2,6 +2,7 @@ module net.cassite.xboxrelay.ui {
     requires net.cassite.xboxrelay.base;
     requires javafx.controls;
     requires vjson;
+    requires io.vproxy.base;
     requires io.vproxy.vfx;
     requires io.vertx.core;
     requires com.sun.jna;

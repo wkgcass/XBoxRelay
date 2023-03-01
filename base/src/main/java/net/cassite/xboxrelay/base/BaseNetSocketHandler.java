@@ -4,6 +4,8 @@ import io.vertx.core.Context;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetSocket;
 import io.vertx.core.net.SocketAddress;
+import io.vproxy.base.util.LogType;
+import io.vproxy.base.util.Logger;
 import vjson.JSON;
 
 public abstract class BaseNetSocketHandler {
@@ -27,7 +29,7 @@ public abstract class BaseNetSocketHandler {
     }
 
     private void handle(Buffer buffer) {
-        _Logger.debug("received buffer from " + remoteAddress() + ": " + buffer);
+        assert Logger.lowLevelDebug("received buffer from " + remoteAddress() + ": " + buffer);
         int offset = 0;
         loop:
         while (true) {
@@ -90,14 +92,14 @@ public abstract class BaseNetSocketHandler {
         try {
             msg = JSON.deserialize(new BufferCharStream(data), Message.messageTypeRule());
         } catch (Exception e) {
-            _Logger.error("failed deserializing data " + data + " from " + sock.remoteAddress(), e);
+            Logger.error(LogType.INVALID_EXTERNAL_DATA,"failed deserializing data " + data + " from " + sock.remoteAddress(), e);
             close();
             return;
         } finally {
             data = null;
         }
         if (msg instanceof HeartBeatMessage hb) {
-            _Logger.debug("received heatbeat from " + sock.remoteAddress() + " " + msg);
+            assert Logger.lowLevelDebug("received heatbeat from " + sock.remoteAddress() + " " + msg);
             if (hb.type == HeartBeatMessage.TYPE_PING) {
                 send(new HeartBeatMessage(HeartBeatMessage.TYPE_PONG));
             }

@@ -126,8 +126,8 @@ project(":base") {
     dependencies {
         api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31"
         api group: 'io.vproxy', name: 'vjson', version: '1.4.7'
+        api group: 'io.vproxy', name: 'commons', version: '0.0.1'
         api group: 'io.vertx', name: 'vertx-core', version: '4.3.7'
-        api group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36'
         api group: 'io.projectreactor.tools', name: 'blockhound', version: '1.0.6.RELEASE'
     }
 }
@@ -140,8 +140,6 @@ project(":agent") {
 
     dependencies {
         implementation project(":base")
-        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36'
-        implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
     }
     task runAgent(type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
@@ -184,6 +182,7 @@ project(":ui-main") {
 
     dependencies {
         implementation project(":ui")
+        implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.5.31'
     }
 
     task runUI(type: JavaExec) {

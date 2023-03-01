@@ -1,7 +1,8 @@
 package net.cassite.xboxrelay.ui.entity;
 
-import io.vproxy.vfx.util.IOUtils;
-import io.vproxy.vfx.util.Logger;
+import io.vproxy.base.util.LogType;
+import io.vproxy.base.util.Logger;
+import io.vproxy.commons.util.IOUtils;
 import net.cassite.xboxrelay.ui.prebuilt.DefaultPlan;
 import net.cassite.xboxrelay.ui.prebuilt.TowerOfFantasyPlan;
 import vjson.CharStream;
@@ -32,7 +33,7 @@ public class ConfigManager {
         if (!dir.exists()) {
             var ok = dir.mkdirs();
             if (!ok) {
-                Logger.error("failed creating config saving directory: " + dir);
+                Logger.error(LogType.FILE_ERROR, "failed creating config saving directory: " + dir);
                 throw new IOException("failed creating config saving directory: " + dir);
             }
         }
@@ -45,7 +46,7 @@ public class ConfigManager {
         try {
             config = JSON.deserialize(CharStream.from(str), Config.rule, ParserOptions.allFeatures());
         } catch (Exception e) {
-            Logger.error("failed deserializing config from " + str + ", using empty config instead", e);
+            Logger.error(LogType.INVALID_INPUT_DATA, "failed deserializing config from " + str + ", using empty config instead", e);
             return Config.empty();
         }
         if (config.plans == null || config.plans.isEmpty()) {
@@ -71,9 +72,9 @@ public class ConfigManager {
         return config;
     }
 
-    public void write(Config config) throws IOException {
+    public void write(Config config) throws Exception {
         var sb = new StringBuilder();
         config.toJson().scriptify(sb, new ScriptifyContext(2));
-        IOUtils.writeFile(filePath, sb.toString());
+        IOUtils.writeFileWithBackup(filePath.toString(), sb.toString());
     }
 }

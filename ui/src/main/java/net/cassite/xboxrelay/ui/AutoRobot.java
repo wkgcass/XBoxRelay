@@ -2,11 +2,11 @@ package net.cassite.xboxrelay.ui;
 
 import com.sun.jna.platform.win32.BaseTSD;
 import com.sun.jna.platform.win32.WinDef;
+import io.vproxy.base.util.OS;
 import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.entity.input.KeyCode;
 import io.vproxy.vfx.robot.RobotWrapper;
 import io.vproxy.vfx.util.FXUtils;
-import io.vproxy.vfx.util.OSUtils;
 import javafx.animation.AnimationTimer;
 import net.cassite.xboxrelay.base.TriggerLevel;
 import net.cassite.xboxrelay.base.XBoxEvent;
@@ -68,7 +68,7 @@ public class AutoRobot {
                 }
             }
             if (dxMouse[0] != 0 || dyMouse[0] != 0) {
-                if (OSUtils.isWindows()) {
+                if (OS.isWindows()) {
                     JNAMouseEvent.User32.INSTANCE.mouse_event(new WinDef.DWORD(JNAMouseEvent.User32.MOUSEEVENTF_MOVE),
                         new WinDef.DWORD(dxMouse[0]), new WinDef.DWORD(dyMouse[0]),
                         new WinDef.DWORD(0), new BaseTSD.ULONG_PTR(0));

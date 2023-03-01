@@ -2,9 +2,9 @@ package net.cassite.xboxrelay.agent;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetSocket;
+import io.vproxy.base.util.LogType;
+import io.vproxy.base.util.Logger;
 import net.cassite.xboxrelay.base.BaseVersion;
-import net.cassite.xboxrelay.base._Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,10 +68,6 @@ public class Main {
             }
         }
 
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
-        var logger = LoggerFactory.getLogger("agent");
-        _Logger.setLoggerAdaptor(new SLF4JLoggerAdaptor(logger));
-
         var manager = new NetSocketManager();
         var vertx = Vertx.vertx();
 
@@ -124,12 +120,12 @@ public class Main {
                 try {
                     line = stdout.readLine();
                 } catch (IOException e) {
-                    _Logger.error("stdout stream received exception when reading", e);
+                    Logger.error(LogType.SYS_ERROR, "stdout stream received exception when reading", e);
                     return;
                 }
                 if (line == null) {
                     // eof
-                    _Logger.warn("stdout reaches eof");
+                    Logger.warn(LogType.SYS_ERROR, "stdout reaches eof");
                     return;
                 }
                 line = line.trim();
@@ -148,12 +144,12 @@ public class Main {
             try {
                 n = stderr.read(buf);
             } catch (IOException e) {
-                _Logger.error("stderr stream received exception when reading", e);
+                Logger.error(LogType.SYS_ERROR, "stderr stream received exception when reading", e);
                 return;
             }
             if (n == -1) {
                 // eof
-                _Logger.warn("stderr reaches eof");
+                Logger.warn(LogType.SYS_ERROR, "stderr reaches eof");
                 return;
             }
             for (int i = 0; i < n; ++i) {
@@ -162,7 +158,7 @@ public class Main {
         });
         outThread.start();
         errThread.start();
-        _Logger.info("xboxdrv launched");
+        Logger.alert("xboxdrv launched");
         outThread.join();
         errThread.join();
     }
