@@ -228,7 +228,7 @@ public class AutoRobot {
                 }
             }
             case MIN -> {
-                if (fnEnabled && group.current == max) {
+                if (fnEnabled && max != null && group.current == max) {
                     triggerFnInput(max);
                     cancel(group, false);
                 } else {
@@ -237,7 +237,7 @@ public class AutoRobot {
             }
             case MAX -> apply(group, max, min, level);
             case B_MIN -> {
-                if (fnEnabled && group.current == bMax) {
+                if (fnEnabled && bMax != null && group.current == bMax) {
                     triggerFnInput(bMax);
                     cancel(group, false);
                 } else {
