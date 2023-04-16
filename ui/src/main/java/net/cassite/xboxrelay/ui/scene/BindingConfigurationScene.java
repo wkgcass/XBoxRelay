@@ -104,7 +104,7 @@ public class BindingConfigurationScene extends VScene {
                 setCursor(Cursor.HAND);
             }};
             chosenKey.setOnMouseClicked(e -> {
-                var key = new KeyChooser().choose();
+                var key = new KeyChooser(KeyChooser.FLAG_WITH_WHEEL_SCROLL | KeyChooser.FLAG_WITH_MOUSE).choose();
                 key.ifPresent(value -> chosenKey.setText(value.toString()));
             });
 
@@ -260,7 +260,7 @@ public class BindingConfigurationScene extends VScene {
                 setCursor(Cursor.HAND);
             }};
             fnInputChosenKey.setOnMouseClicked(e -> {
-                var key = new KeyChooser().choose();
+                var key = new KeyChooser(KeyChooser.FLAG_WITH_WHEEL_SCROLL | KeyChooser.FLAG_WITH_MOUSE).choose();
                 key.ifPresent(value -> fnInputChosenKey.setText(value.toString()));
             });
 

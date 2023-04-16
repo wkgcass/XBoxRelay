@@ -12,7 +12,7 @@ public class Main {
         if (dllStream == null) {
             Logger.warn(LogType.SYS_ERROR, dllPath + " not found, program might not work");
         } else {
-            GlobalScreenUtils.releaseJNativeHookNativeToTmpDir("dll", dllStream);
+            GlobalScreenUtils.releaseJNativeHookNativeToLibraryPath(dllStream);
         }
 
         Application.launch(FXMain.class);
