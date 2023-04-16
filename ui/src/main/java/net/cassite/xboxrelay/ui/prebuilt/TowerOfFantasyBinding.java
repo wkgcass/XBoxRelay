@@ -3,6 +3,7 @@ package net.cassite.xboxrelay.ui.prebuilt;
 import io.vproxy.vfx.entity.input.InputData;
 import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.entity.input.KeyCode;
+import io.vproxy.vfx.entity.input.MouseWheelScroll;
 import javafx.scene.input.MouseButton;
 import net.cassite.xboxrelay.ui.Binding;
 import net.cassite.xboxrelay.ui.Action;
@@ -13,7 +14,7 @@ public class TowerOfFantasyBinding extends Binding {
         b = new Action(new Key(MouseButton.PRIMARY)).setFnInput(new InputData(false, false, false, new Key(KeyCode.F)));
         y = new Action(new Key(KeyCode.KEY_1)).setFnInput(new InputData(false, false, false, new Key(KeyCode.X)));
         a = new Action(new Key(KeyCode.SPACE)).setFnInput(new InputData(false, false, false, new Key(KeyCode.CONTROL, true)));
-        x = new Action(new Key(MouseButton.SECONDARY));
+        x = new Action(new Key(MouseButton.SECONDARY)).setFnInput(new InputData(false, false, false, new Key(KeyCode.TAB)));
         rtMin = new Action(new Key(KeyCode.KEY_2));
         rtMax = rtMin;
         rb = new Action(new Key(KeyCode.KEY_3));
@@ -30,11 +31,13 @@ public class TowerOfFantasyBinding extends Binding {
         lsbXMin = new Action(new Key(KeyCode.D));
         lsbXMax = lsbXMin;
         lsbYMin = new Action(new Key(KeyCode.W));
-        lsbYMax = lsbYMin;
+        lsbYMax = new Action(new Key(KeyCode.W)).setFnInput(new InputData(false, false, false, new Key(
+            new MouseWheelScroll(MouseWheelScroll.Direction.UP))));
         lsbXBMin = new Action(new Key(KeyCode.A));
         lsbXBMax = lsbXBMin;
         lsbYBMin = new Action(new Key(KeyCode.S));
-        lsbYBMax = lsbYBMin;
+        lsbYBMax = new Action(new Key(KeyCode.S)).setFnInput(new InputData(false, false, false, new Key(
+            new MouseWheelScroll(MouseWheelScroll.Direction.DOWN))));
 
         rsbXMin = new Action(new MouseMove(500, 0));
         rsbXMax = new Action(new MouseMove(1500, 0));
