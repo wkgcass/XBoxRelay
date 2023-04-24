@@ -1,6 +1,5 @@
 package net.cassite.xboxrelay.base;
 
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.ObjectRule;
@@ -55,7 +54,6 @@ public class DeadZoneSettings implements JSONObject {
         }
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         var ob = new ObjectBuilder();

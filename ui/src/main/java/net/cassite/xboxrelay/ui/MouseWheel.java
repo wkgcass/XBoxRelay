@@ -1,6 +1,5 @@
 package net.cassite.xboxrelay.ui;
 
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.DoubleRule;
@@ -43,7 +42,6 @@ public class MouseWheel implements JSONObject {
         return (int) (temp ^ (temp >>> 32));
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         return new ObjectBuilder()

@@ -1,6 +1,5 @@
 package net.cassite.xboxrelay.ui;
 
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.ObjectRule;
@@ -194,7 +193,6 @@ public class Binding implements JSONObject {
         action.group = group;
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         var ob = new ObjectBuilder();

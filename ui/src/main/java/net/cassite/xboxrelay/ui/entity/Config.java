@@ -2,7 +2,6 @@ package net.cassite.xboxrelay.ui.entity;
 
 import net.cassite.xboxrelay.ui.prebuilt.DefaultPlan;
 import net.cassite.xboxrelay.ui.prebuilt.TowerOfFantasyPlan;
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.ObjectRule;
@@ -35,7 +34,6 @@ public class Config implements JSONObject {
         return ret;
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         var ob = new ObjectBuilder();

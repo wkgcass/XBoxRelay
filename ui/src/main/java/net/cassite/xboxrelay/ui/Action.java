@@ -3,7 +3,6 @@ package net.cassite.xboxrelay.ui;
 import io.vproxy.vfx.entity.input.InputData;
 import io.vproxy.vfx.entity.input.Key;
 import io.vproxy.vfx.util.MiscUtils;
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.BoolRule;
@@ -148,7 +147,6 @@ public class Action implements JSONObject {
         return result;
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         var ob = new ObjectBuilder();

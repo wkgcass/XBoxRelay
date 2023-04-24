@@ -1,6 +1,5 @@
 package net.cassite.xboxrelay.base;
 
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.deserializer.rule.IntRule;
 import vjson.deserializer.rule.ObjectRule;
@@ -22,7 +21,6 @@ public class HeartBeatMessage extends Message {
         this.type = type;
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         return new ObjectBuilder()

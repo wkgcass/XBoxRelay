@@ -1,6 +1,5 @@
 package net.cassite.xboxrelay.ui;
 
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.DoubleRule;
@@ -53,7 +52,6 @@ public class MouseMove implements JSONObject {
         return result;
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         return new ObjectBuilder()

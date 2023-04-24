@@ -7,7 +7,6 @@ module net.cassite.xboxrelay.ui {
     requires io.vertx.core;
     requires com.sun.jna;
     requires com.sun.jna.platform;
-    requires annotations;
 
     opens net.cassite.xboxrelay.ui.res;
     exports net.cassite.xboxrelay.ui;

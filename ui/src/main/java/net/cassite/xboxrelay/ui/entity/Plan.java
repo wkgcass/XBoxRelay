@@ -2,7 +2,6 @@ package net.cassite.xboxrelay.ui.entity;
 
 import net.cassite.xboxrelay.base.DeadZoneSettings;
 import net.cassite.xboxrelay.ui.Binding;
-import org.jetbrains.annotations.NotNull;
 import vjson.JSON;
 import vjson.JSONObject;
 import vjson.deserializer.rule.BoolRule;
@@ -36,7 +35,6 @@ public class Plan implements JSONObject {
         this.isNotDeletable = p.isNotDeletable;
     }
 
-    @NotNull
     @Override
     public JSON.Object toJson() {
         return toJson(true);
