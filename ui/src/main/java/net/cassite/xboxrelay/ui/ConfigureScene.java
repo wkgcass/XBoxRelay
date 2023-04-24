@@ -549,9 +549,26 @@ public class ConfigureScene extends VScene {
         return true;
     }
 
+    private Runnable onStartEventHandler;
+    private Runnable onStopEventHandler;
+
+    public Runnable getOnStartEventHandler() {
+        return onStartEventHandler;
+    }
+
+    public Runnable getOnStopEventHandler() {
+        return onStopEventHandler;
+    }
+
+    public void setOnStartEventHandler(Runnable onStartEventHandler) {
+        this.onStartEventHandler = onStartEventHandler;
+    }
+
+    public void setOnStopEventHandler(Runnable onStopEventHandler) {
+        this.onStopEventHandler = onStopEventHandler;
+    }
+
     private void start() {
-        connectButton.setDisable(true);
-        var robot = new AutoRobot(currentPlan.binding);
         if (client == null) {
             client = new ClientVerticle(address.getText(),
                 new ConfigureMessage(currentPlan.deadZoneSettings), robot,
@@ -566,10 +583,19 @@ public class ConfigureScene extends VScene {
                 return;
             }
         }
-        robot.start();
-        this.robot = robot;
+        if (this.robot == null) {
+            var robot = new AutoRobot(currentPlan.binding);
+            robot.start();
+            this.robot = robot;
+        }
+        connectButton.setDisable(true);
         disconnectButton.setDisable(false);
         saveConfig();
+
+        var onStartEventHandler = this.onStartEventHandler;
+        if (onStartEventHandler != null) {
+            onStartEventHandler.run();
+        }
     }
 
     private void stopCallback() {
@@ -591,11 +617,17 @@ public class ConfigureScene extends VScene {
             }
         }
         var robot = this.robot;
+        this.robot = null;
         if (robot != null) {
             robot.stop();
         }
         disconnectButton.setDisable(true);
         connectButton.setDisable(false);
+
+        var onStopEventHandler = this.onStopEventHandler;
+        if (onStopEventHandler != null) {
+            onStopEventHandler.run();
+        }
     }
 
     private void applyPlan(Plan p) {
