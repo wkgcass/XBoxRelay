@@ -22,8 +22,12 @@ import net.cassite.xboxrelay.ui.entity.Plan;
 import java.util.Arrays;
 
 public class ShowConfigTableScene extends VScene {
+    private VSceneGroup sceneGroup;
+
     public ShowConfigTableScene(VSceneGroup sceneGroup, Plan plan) {
         super(VSceneRole.TEMPORARY);
+        this.sceneGroup = sceneGroup;
+
         enableAutoContentWidthHeight();
         getNode().setBackground(new Background(new BackgroundFill(
             Theme.current().sceneBackgroundColor(),
@@ -71,10 +75,7 @@ public class ShowConfigTableScene extends VScene {
         back.setPrefWidth(120);
         FXUtils.observeHeight(bottomPane.getContentPane(), back);
         bottomPane.getContentPane().getChildren().add(back);
-        back.setOnAction(e -> {
-            sceneGroup.hide(this, VSceneHideMethod.TO_RIGHT);
-            FXUtils.runDelay(ANIMATION_DURATION_MILLIS, () -> sceneGroup.removeScene(this));
-        });
+        back.setOnAction(e -> hideAndRemove());
 
         var b = plan.binding;
         var d = plan.deadZoneSettings;
@@ -105,6 +106,11 @@ public class ShowConfigTableScene extends VScene {
             new TableData("LT", b.ltMin, b.ltMax, d.min.lt, d.max.lt),
             new TableData("RT", b.rtMin, b.rtMax, d.min.rt, d.max.rt)
         ));
+    }
+
+    public void hideAndRemove() {
+        sceneGroup.hide(this, VSceneHideMethod.TO_RIGHT);
+        FXUtils.runDelay(ANIMATION_DURATION_MILLIS, () -> sceneGroup.removeScene(this));
     }
 
     private static class TableData implements CellAware<TableData> {

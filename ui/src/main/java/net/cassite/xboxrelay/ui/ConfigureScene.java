@@ -68,6 +68,8 @@ public class ConfigureScene extends VScene {
         })
         .build(buttonsOpacity0);
 
+    private ShowConfigTableScene lastConfigTableScene = null;
+
     public ConfigureScene(Vertx vertx, Supplier<VSceneGroup> sceneGroupGetter) {
         super(VSceneRole.MAIN);
         enableAutoContentWidthHeight();
@@ -160,6 +162,7 @@ public class ConfigureScene extends VScene {
             FXUtils.observeHeight(topPane.getContentPane(), tableButton);
             tableButton.setOnAction(e -> {
                 var scene = new ShowConfigTableScene(sceneGroupGetter.get(), currentPlan);
+                lastConfigTableScene = scene;
                 sceneGroupGetter.get().addScene(scene, VSceneHideMethod.TO_RIGHT);
                 sceneGroupGetter.get().show(scene, VSceneShowMethod.FROM_RIGHT);
             });
@@ -643,6 +646,16 @@ public class ConfigureScene extends VScene {
             ConfigManager.get().write(config);
         } catch (Exception e) {
             StackTraceAlert.showAndWait(I18n.get().savingConfigurationFailed(), e);
+        }
+    }
+
+    public void hideConfigTableScene() {
+        var scene = lastConfigTableScene;
+        if (scene == null) {
+            return;
+        }
+        if (sceneGroupGetter.get().isShowing(scene)) {
+            scene.hideAndRemove();
         }
     }
 }
