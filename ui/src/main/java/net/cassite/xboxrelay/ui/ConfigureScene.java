@@ -531,7 +531,7 @@ public class ConfigureScene extends VScene {
     }
 
     @Override
-    protected void beforeShowing() throws Exception {
+    protected boolean checkBeforeShowing() throws Exception {
         var config = ConfigManager.get().read();
         if (config.address != null && !config.address.isBlank()) {
             address.setText(config.address.trim());
@@ -546,6 +546,7 @@ public class ConfigureScene extends VScene {
             planComboBox.setValue(null);
         }
         applyPlan(config.lastPlan);
+        return true;
     }
 
     private void start() {
